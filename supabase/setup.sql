@@ -21,7 +21,7 @@ create table if not exists registrations (
   fonction     text not null check (char_length(fonction) between 1 and 120),
   secteur      text not null check (char_length(secteur) <= 120),
   membre       boolean not null,
-  tarif        int generated always as (case when membre then 20000 else 30000 end) stored,
+  tarif        int generated always as (case when membre then 25000 else 35000 end) stored,
   attentes     text check (char_length(attentes) <= 500),
   statut       text not null default 'attente' check (statut in ('attente','paye','liste')),
   consent_at   timestamptz not null default now(),
@@ -37,7 +37,7 @@ create table if not exists payments (
   bordereau       text,                       -- repris de l'inscription trouvée par e-mail
   nom             text not null check (char_length(nom) <= 120),
   email           text not null check (char_length(email) <= 200),
-  tarif           int  not null check (tarif in (20000, 30000)),
+  tarif           int  not null check (tarif in (25000, 35000)),
   mode            text not null check (char_length(mode) <= 60),
   proof_path      text,                       -- fichier dans le stockage privé « preuves »
   statut          text not null default 'wait' check (statut in ('wait','ok','ko')),
@@ -131,6 +131,14 @@ on conflict (id) do update set public = false, file_size_limit = 5242880,
 
 drop policy if exists preuves_depot on storage.objects;
 create policy preuves_depot on storage.objects for insert to anon with check (bucket_id = 'preuves');
+
+-- ---------- Tarifs : 25 000 FCFA (membres) et 35 000 FCFA (non-membres) ----------
+-- Met aussi à jour une base créée avec l'ancienne version du script (20 000 / 30 000).
+drop view if exists inscrits_export;
+alter table registrations drop column if exists tarif;
+alter table registrations add column tarif int generated always as (case when membre then 25000 else 35000 end) stored;
+alter table payments drop constraint if exists payments_tarif_check;
+alter table payments add constraint payments_tarif_check check (tarif in (25000, 35000)) not valid;
 
 -- ---------- Tableau des inscrits pour les propriétaires ----------
 -- Une ligne par inscrit : bordereau/facture, coordonnées, tarif, statut et dernière preuve de paiement.
