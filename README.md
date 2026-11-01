@@ -7,7 +7,7 @@ Page d'inscription et espace propriétaires du **RISK & COMPLIANCE ANNUAL FORUM*
 - `supabase/setup.sql` : tables, règles d'accès, numéros de bordereau (RCF-2027-NNNN), vue d'export, espace propriétaires.
 
 ## Mise en ligne
-1. Hébergeur (Netlify, Vercel, Cloudflare Pages ou GitHub Pages) : brancher ce dépôt, aucun build, dossier racine `/`.
+1. Vercel : « Add New… > Project », importer ce dépôt, Framework Preset « Other », aucune commande de build, dossier racine `./`. Chaque `git push` sur `main` redéploie le site automatiquement. `vercel.json` ajoute les en-têtes de sécurité.
 2. Supabase : ouvrir `supabase/setup.sql`, remplacer `VOTRE_EMAIL`, l'exécuter dans le SQL Editor.
 3. Supabase > Authentication : désactiver « Confirm email » et renseigner « Site URL » avec l'adresse du site.
 4. Sur le site : icône utilisateur > « Créer un compte » avec l'adresse du script : vous arrivez sur le tableau de bord.
