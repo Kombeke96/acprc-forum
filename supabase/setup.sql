@@ -243,3 +243,37 @@ begin
 end $$;
 revoke all on function claim_first_owner() from public;
 grant execute on function claim_first_owner() to authenticated;
+
+-- ---------------------------------------------------------------------
+-- Places restantes (public) et décision sur un paiement (propriétaires)
+-- ---------------------------------------------------------------------
+create or replace function seats_left() returns integer
+language sql stable security definer set search_path = public as $$
+  select greatest(0, (select capacity from settings where id = 1)
+                     - (select count(*)::int from registrations where statut <> 'liste'));
+$$;
+revoke all on function seats_left() from public;
+grant execute on function seats_left() to anon, authenticated;
+
+-- p = {"id": <payments.id>, "ok": true|false}
+create or replace function decide_payment(p jsonb) returns jsonb
+language plpgsql security definer set search_path = public as $$
+declare pay payments; reg registrations;
+begin
+  if not is_owner() then raise exception 'forbidden' using errcode = '42501'; end if;
+  select * into pay from payments where id = (p->>'id')::bigint;
+  if pay.id is null then raise exception 'not found'; end if;
+  select * into reg from registrations where id = pay.registration_id;
+  if (p->>'ok')::boolean then
+    if reg.statut = 'liste' and seats_left() <= 0 then
+      return jsonb_build_object('done', false, 'reason', 'full');
+    end if;
+    update payments set statut = 'ok' where id = pay.id;
+    update registrations set statut = 'paye' where id = reg.id;
+  else
+    update payments set statut = 'ko' where id = pay.id;
+  end if;
+  return jsonb_build_object('done', true);
+end $$;
+revoke all on function decide_payment(jsonb) from public;
+grant execute on function decide_payment(jsonb) to authenticated;
