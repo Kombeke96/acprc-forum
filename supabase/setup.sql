@@ -167,7 +167,7 @@ alter view inscrits_export set (security_invoker = true);
 revoke all on inscrits_export from anon, authenticated;
 
 -- =====================================================================
--- ESPACE PROPRIÉTAIRES : comptes, tableau de bord, supervision
+-- ESPACE SUPER ADMIN : comptes, tableau de bord, supervision
 -- =====================================================================
 create table if not exists staff (
   user_id    uuid primary key references auth.users(id) on delete cascade,
