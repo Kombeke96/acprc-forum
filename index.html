@@ -253,23 +253,23 @@ details[open] summary::after{content:"–"}
 details p{padding:0 1.3rem 1.1rem;font-size:.92rem;color:var(--muted)}
 
 /* Pied de page */
-footer{padding-block:1rem 2rem}
+footer{padding-block:.5rem 1rem}
 .fcontact li{display:grid;grid-template-columns:6.4rem auto;gap:.5rem;align-items:start;justify-content:start}
 .fcontact a{white-space:nowrap}
 .fcontact li>span{opacity:.75}
 .socs{display:flex;gap:.55rem}.soc{display:inline-flex;align-items:center;justify-content:center;width:2rem;height:2rem;border-radius:50%;background:#fff;transition:transform .2s,box-shadow .2s}.soc:hover,.soc:focus-visible{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.35)}.soc[aria-label=LinkedIn]{color:#0A66C2}.soc[aria-label=Facebook]{color:#1877F2}.soc[aria-label=YouTube]{color:#FF0000}
 .fcontact em{font-style:normal}
 @media(max-width:480px){.fcontact li{grid-template-columns:6.4rem 1fr}}
-.foot{background:var(--navy);color:#dbe3f3;border-radius:36px;padding:2.4rem clamp(1.3rem,4vw,3rem) 1.6rem;position:relative;overflow:hidden;display:grid;gap:2rem}
+.foot{background:var(--navy);color:#dbe3f3;border-radius:36px;padding:1.8rem clamp(1.3rem,4vw,3rem) 1.2rem;position:relative;overflow:hidden;display:grid;gap:1.3rem}
 .foot::after{content:"";position:absolute;right:-90px;bottom:-110px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(217,162,74,.5),transparent 65%);pointer-events:none}
 .foot>*{position:relative;z-index:1}
-.fgrid{display:grid;gap:2rem;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.fgrid{display:grid;gap:1.4rem;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
 .foot h4{color:#fff;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.7rem}
 .foot ul{list-style:none;margin:0;padding:0;display:grid;gap:.4rem;font-size:.9rem}
 .foot a{color:#fff}
 .brandrow{display:flex;gap:.9rem;align-items:center}
 .brandrow .logo{width:58px;height:58px}
-.legal{border-top:1px solid rgba(255,255,255,.18);padding-top:1.2rem;font-size:.78rem;color:#aebbd6;display:flex;gap:.5rem 1.5rem;flex-wrap:wrap;justify-content:space-between}
+.legal{border-top:1px solid rgba(255,255,255,.18);padding-top:.9rem;font-size:.78rem;color:#aebbd6;display:flex;gap:.3rem 1.5rem;flex-wrap:wrap;justify-content:flex-start}
 
 /* Page paiement */
 .page{padding-block:2.2rem 3rem;position:relative}
@@ -957,7 +957,6 @@ details.pm .perms{margin-top:.5rem}
         <div><h4>Contact</h4><ul class="fcontact"><li><span>E-mail</span><a href="mailto:contact@acprc-global.org">contact@acprc-global.org</a></li><li><span>Téléphone</span><div><a href="tel:+237677171213">+237 6 77 17 12 13</a><br><a href="tel:+237679592168">+237 6 79 59 21 68</a></div></li><li><span>Réseaux sociaux</span><div class="socs"><a class="soc" href="https://www.linkedin.com/company/acprc-cameroun/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a><a class="soc" href="https://www.facebook.com/share/19caENXCSi/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.69.24 2.69.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.88v2.26h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z"/></svg></a><a class="soc" href="https://youtube.com/@acprc-risqueconformitecameroun?si=xQYNP9le7pxCuvp6" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg></a></div></li></ul></div>
       </div>
       <div class="legal">
-        <span></span>
         <span>© 2027 ACPRC · Page réalisée par Assiral Digital Services, Douala</span>
       </div>
     </div>
