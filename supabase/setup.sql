@@ -277,3 +277,11 @@ begin
 end $$;
 revoke all on function decide_payment(jsonb) from public;
 grant execute on function decide_payment(jsonb) to authenticated;
+
+-- Droits d'exécution explicites (Supabase donne par défaut anon + authenticated)
+revoke all on function register_participant(jsonb), submit_payment(jsonb), submit_sponsor(jsonb) from public, anon, authenticated;
+grant execute on function register_participant(jsonb), submit_payment(jsonb), submit_sponsor(jsonb) to anon;
+revoke all on function seats_left() from public, anon, authenticated;
+grant execute on function seats_left() to anon, authenticated;
+revoke all on function is_staff(), is_owner(), claim_first_owner(), decide_payment(jsonb) from public, anon, authenticated;
+grant execute on function is_staff(), is_owner(), claim_first_owner(), decide_payment(jsonb) to authenticated;
