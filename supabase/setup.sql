@@ -285,3 +285,68 @@ revoke all on function seats_left() from public, anon, authenticated;
 grant execute on function seats_left() to anon, authenticated;
 revoke all on function is_staff(), is_owner(), claim_first_owner(), decide_payment(jsonb) from public, anon, authenticated;
 grant execute on function is_staff(), is_owner(), claim_first_owner(), decide_payment(jsonb) to authenticated;
+
+-- ---------------------------------------------------------------------
+-- BUREAU ET INTERVENANTS (déjà appliqué sur le projet ; script sûr à relancer)
+-- Le super admin autorise des comptes de supervision à modifier (staff.can_speakers)
+-- et décide seul de la présence dans le panel (speakers.en_panel).
+-- ---------------------------------------------------------------------
+alter table staff add column if not exists can_speakers boolean not null default false;
+create table if not exists speakers (
+  id           bigint generated always as identity primary key,
+  nom          text not null check (char_length(nom) between 2 and 120),
+  statut       text not null default 'Intervenant' check (char_length(statut) <= 60),
+  fonction     text check (char_length(fonction) <= 160),
+  organisation text check (char_length(organisation) <= 160),
+  bio          text check (char_length(bio) <= 800),
+  photo_path   text,
+  confirme     boolean not null default false,
+  en_panel     boolean not null default false,
+  created_by   uuid default auth.uid(),
+  created_at   timestamptz not null default now(),
+  updated_at   timestamptz not null default now()
+);
+alter table speakers enable row level security;
+revoke all on speakers from anon, authenticated;
+grant select, insert, update, delete on speakers to authenticated;
+
+create or replace function can_edit_speakers() returns boolean
+language sql stable security definer set search_path = public as $$
+  select exists (select 1 from staff where user_id = auth.uid() and active and (role = 'proprietaire' or can_speakers))
+$$;
+create or replace function speakers_guard() returns trigger
+language plpgsql security definer set search_path = public as $$
+begin
+  if not is_owner() then
+    if tg_op = 'INSERT' then new.en_panel := false; else new.en_panel := old.en_panel; end if;
+  end if;
+  new.updated_at := now();
+  return new;
+end $$;
+drop trigger if exists speakers_guard_trg on speakers;
+create trigger speakers_guard_trg before insert or update on speakers for each row execute function speakers_guard();
+
+drop policy if exists spk_read on speakers; drop policy if exists spk_ins on speakers;
+drop policy if exists spk_upd on speakers;  drop policy if exists spk_del on speakers;
+create policy spk_read on speakers for select to authenticated using (is_staff());
+create policy spk_ins  on speakers for insert to authenticated with check (can_edit_speakers());
+create policy spk_upd  on speakers for update to authenticated using (can_edit_speakers()) with check (can_edit_speakers());
+create policy spk_del  on speakers for delete to authenticated using (can_edit_speakers());
+
+create or replace function public_speakers() returns jsonb
+language sql stable security definer set search_path = public as $$
+  select coalesce(jsonb_agg(jsonb_build_object('id', id, 'nom', nom, 'statut', statut, 'fonction', fonction,
+         'organisation', organisation, 'bio', bio, 'photo_path', photo_path) order by id), '[]'::jsonb)
+  from speakers where en_panel and confirme
+$$;
+revoke all on function can_edit_speakers(), speakers_guard(), public_speakers() from public, anon, authenticated;
+grant execute on function can_edit_speakers() to authenticated;
+grant execute on function public_speakers() to anon, authenticated;
+
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('intervenants', 'intervenants', true, 2097152, array['image/jpeg','image/png','image/webp'])
+on conflict (id) do update set public = true, file_size_limit = 2097152, allowed_mime_types = array['image/jpeg','image/png','image/webp'];
+drop policy if exists spk_photo_ins on storage.objects; drop policy if exists spk_photo_upd on storage.objects; drop policy if exists spk_photo_del on storage.objects;
+create policy spk_photo_ins on storage.objects for insert to authenticated with check (bucket_id = 'intervenants' and can_edit_speakers());
+create policy spk_photo_upd on storage.objects for update to authenticated using (bucket_id = 'intervenants' and can_edit_speakers());
+create policy spk_photo_del on storage.objects for delete to authenticated using (bucket_id = 'intervenants' and can_edit_speakers());
