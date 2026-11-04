@@ -351,3 +351,35 @@ drop policy if exists spk_photo_ins on storage.objects; drop policy if exists sp
 create policy spk_photo_ins on storage.objects for insert to authenticated with check (bucket_id = 'intervenants' and can_edit_speakers());
 create policy spk_photo_upd on storage.objects for update to authenticated using (bucket_id = 'intervenants' and can_edit_speakers());
 create policy spk_photo_del on storage.objects for delete to authenticated using (bucket_id = 'intervenants' and can_edit_speakers());
+
+-- ---------------------------------------------------------------------
+-- Réglages (places, ouverture), décision sur les sponsors, protection anti-spam
+-- (déjà appliqué sur le projet ; script sûr à relancer)
+-- ---------------------------------------------------------------------
+create or replace function public_settings() returns jsonb
+language sql stable security definer set search_path = public as $$
+  select jsonb_build_object('capacity', capacity, 'open', open) from settings where id = 1
+$$;
+create or replace function update_settings(p jsonb) returns jsonb
+language plpgsql security definer set search_path = public as $$
+declare c int;
+begin
+  if not is_owner() then raise exception 'forbidden' using errcode = '42501'; end if;
+  c := (p->>'capacity')::int;
+  if c is null or c < 1 or c > 5000 then raise exception 'capacite_invalide'; end if;
+  update settings set capacity = c, open = coalesce((p->>'open')::boolean, open) where id = 1;
+  return public_settings();
+end $$;
+create or replace function decide_sponsor(p jsonb) returns jsonb
+language plpgsql security definer set search_path = public as $$
+begin
+  if not is_owner() then raise exception 'forbidden' using errcode = '42501'; end if;
+  update sponsors set statut = case when (p->>'ok')::boolean then 'ok' else 'ko' end where id = (p->>'id')::bigint;
+  if not found then raise exception 'not found'; end if;
+  return jsonb_build_object('done', true);
+end $$;
+revoke all on function public_settings(), update_settings(jsonb), decide_sponsor(jsonb) from public, anon, authenticated;
+grant execute on function public_settings() to anon, authenticated;
+grant execute on function update_settings(jsonb), decide_sponsor(jsonb) to authenticated;
+-- Anti-spam : les fonctions register_participant, submit_payment et submit_sponsor ignorent les envois
+-- dont le champ piège « website » est rempli et refusent plus de 40 / 60 / 20 envois sur 10 minutes.
