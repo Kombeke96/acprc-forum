@@ -1281,7 +1281,7 @@ footer{padding:.5rem 0 1.2rem;margin-top:1rem;background:none}
       var wasFull=full();
       var price=member()==='Oui'?'25 000 FCFA':'35 000 FCFA';
       emails[$('email').value.trim().toLowerCase()]=1;
-      if(!wasFull)CONFIG.registered++;
+      /* la place n'est décomptée qu'à la confirmation du paiement par le super admin */
       var reg={id:nextReg++,nom:$('nom').value.trim(),email:$('email').value.trim(),org:$('org').value.trim(),tel:fullPhone('tel'),fonction:$('fonction').value.trim(),attentes:$('attentes').value.trim(),secteur:frOf($('secteur')),membre:member(),statut:wasFull?'liste':'attente',profil:'verif',ts:new Date()};
       registrants.unshift(reg);
       var sbP=sbRegister(reg);
@@ -2216,7 +2216,7 @@ footer{padding:.5rem 0 1.2rem;margin-top:1rem;background:none}
     var D=DASH,S=dashSets(),reg=D.reg;
     var liste=reg.filter(function(r){return r.statut==='liste'}).length;
     var paid=reg.filter(function(r){return r.statut==='paye'||S.ok[r.bordereau]});
-    var seats=Math.max(0,CONFIG.capacity-(reg.length-liste));
+    var seats=Math.max(0,CONFIG.capacity-reg.filter(function(r){return r.statut==='paye'}).length);
     var expected=0,got=0;reg.forEach(function(r){if(r.statut!=='liste')expected+=r.tarif});paid.forEach(function(r){got+=r.tarif});
     var toCheck=D.pay.filter(function(p){return !p.archived&&p.statut==='wait'});
     var members=reg.filter(function(r){return r.membre}).length;

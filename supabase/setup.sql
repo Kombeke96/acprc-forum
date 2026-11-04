@@ -74,7 +74,8 @@ declare s settings; n int; r registrations;
 begin
   select * into s from settings where id = 1;
   if not s.open then raise exception 'inscriptions_closed'; end if;
-  select count(*) into n from registrations where statut <> 'liste';
+  -- une place n'est prise que lorsque le paiement est confirmé
+  select count(*) into n from registrations where statut = 'paye';
   begin
     insert into registrations (nom,email,tel,organisation,fonction,secteur,membre,attentes,statut)
     values (btrim(p->>'nom'), btrim(p->>'email'), btrim(p->>'tel'), btrim(p->>'organisation'),
@@ -250,7 +251,7 @@ grant execute on function claim_first_owner() to authenticated;
 create or replace function seats_left() returns integer
 language sql stable security definer set search_path = public as $$
   select greatest(0, (select capacity from settings where id = 1)
-                     - (select count(*)::int from registrations where statut <> 'liste'));
+                     - (select count(*)::int from registrations where statut = 'paye'));
 $$;
 revoke all on function seats_left() from public;
 grant execute on function seats_left() to anon, authenticated;
@@ -265,7 +266,7 @@ begin
   if pay.id is null then raise exception 'not found'; end if;
   select * into reg from registrations where id = pay.registration_id;
   if (p->>'ok')::boolean then
-    if reg.statut = 'liste' and seats_left() <= 0 then
+    if reg.statut <> 'paye' and seats_left() <= 0 then
       return jsonb_build_object('done', false, 'reason', 'full');
     end if;
     update payments set statut = 'ok' where id = pay.id;
