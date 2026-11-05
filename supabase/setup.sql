@@ -383,3 +383,7 @@ grant execute on function public_settings() to anon, authenticated;
 grant execute on function update_settings(jsonb), decide_sponsor(jsonb) to authenticated;
 -- Anti-spam : les fonctions register_participant, submit_payment et submit_sponsor ignorent les envois
 -- dont le champ piège « website » est rempli et refusent plus de 40 / 60 / 20 envois sur 10 minutes.
+
+-- Paiements envoyés avant l'inscription : rattachés au bordereau quand la personne s'inscrit avec le même e-mail
+-- (register_participant) ; decide_payment refuse de confirmer un paiement sans inscription liée.
+-- Voir les définitions à jour dans la base ; elles remplacent celles ci-dessus.
