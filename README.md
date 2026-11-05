@@ -15,3 +15,9 @@ Page d'inscription et espace propriétaires du **RISK & COMPLIANCE ANNUAL FORUM*
 ## Sécurité
 - La page contient uniquement l'URL du projet et la clé publique (`sb_publishable_…`). Ne jamais y mettre la clé `service_role`.
 - Les données ne sont lisibles que par les comptes actifs de la table `staff` (règles RLS).
+
+
+## Livraison
+
+À la livraison, exécuter `supabase/livraison.sql` (une fois) après avoir remplacé l'adresse du propriétaire :
+son compte devient super admin automatiquement dès sa première inscription sur le site.
