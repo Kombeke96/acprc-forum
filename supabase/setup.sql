@@ -387,3 +387,9 @@ grant execute on function update_settings(jsonb), decide_sponsor(jsonb) to authe
 -- Paiements envoyés avant l'inscription : rattachés au bordereau quand la personne s'inscrit avec le même e-mail
 -- (register_participant) ; decide_payment refuse de confirmer un paiement sans inscription liée.
 -- Voir les définitions à jour dans la base ; elles remplacent celles ci-dessus.
+
+-- Rôles : proprietaire (Super admin), gerant, moderateur
+alter table staff drop constraint if exists staff_role_check;
+update staff set role = 'moderateur' where role = 'supervision';
+alter table staff add constraint staff_role_check check (role in ('proprietaire','gerant','moderateur'));
+-- is_manager() (proprietaire ou gerant) : decide_payment l'exige. owner_bootstrap : seul contact@acprc-global.org.
