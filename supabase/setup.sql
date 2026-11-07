@@ -393,3 +393,9 @@ alter table staff drop constraint if exists staff_role_check;
 update staff set role = 'moderateur' where role = 'supervision';
 alter table staff add constraint staff_role_check check (role in ('proprietaire','gerant','moderateur'));
 -- is_manager() (proprietaire ou gerant) : decide_payment l'exige. owner_bootstrap : seul contact@acprc-global.org.
+
+-- Paiement automatique + facture (migration api_paiement_et_facture)
+alter table payments add column if not exists confirmed_at timestamptz;
+-- decide_payment n'est plus appelable depuis le site (plus de confirmation manuelle).
+-- confirm_payment_by_ref(p jsonb) : appelée par la fonction serveur de l'API de paiement (clé service) ; confirme le paiement, passe l'inscription à « paye » (si place libre) et horodate.
+-- get_invoice(p jsonb) : anon ; renvoie la facture seulement si bordereau + e-mail correspondent et si le paiement est confirmé.
