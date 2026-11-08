@@ -641,7 +641,6 @@ footer{padding:.5rem 0 1.2rem;margin-top:1rem;background:none}
     <a href="#tableau" data-dsec="apercu">Vue d'ensemble</a>
     <a href="#orateurs" data-side="orateurs" data-need="speakers">Intervenants</a>
     <a href="#comptes" data-side="comptes" data-need="accounts">Équipe</a>
-    <a href="#tableau" data-dsec="reglages" data-need="accounts">Réglages</a>
     <a href="#mentions" data-side="mentions" data-need="accounts">Mentions légales</a>
   </nav>
   <div class="dside-foot"><a href="#accueil">← Voir le site</a><button type="button" id="sdLogout">Se déconnecter</button></div>
@@ -890,19 +889,6 @@ footer{padding:.5rem 0 1.2rem;margin-top:1rem;background:none}
         <div id="dbGrid" data-dyn></div>
         <h2 class="sec-title">Activité récente</h2>
         <div class="card"><ul class="feed" id="dbFeed" data-dyn></ul></div>
-      </div>
-      <div data-sec="reglages" hidden>
-        <div class="card fiche" id="dbSet" hidden style="margin-bottom:1.2rem">
-        <h2 class="fiche-t">Réglages du forum</h2>
-        <form id="setForm" novalidate>
-          <div class="row two">
-            <div class="f"><label for="setCap">Nombre de places</label><input id="setCap" type="number" min="1" max="5000" inputmode="numeric"></div>
-            <div class="f"><label>Inscriptions</label><label class="spk-checks" style="margin:0"><span style="display:flex;gap:.6rem;align-items:center"><input type="checkbox" id="setOpen"> <span>Ouvertes au public</span></span></label></div>
-          </div>
-          <div class="msg" id="setMsg" aria-live="polite" data-dyn></div>
-          <div class="submit-row"><button class="btn btn-sm" type="submit" id="setBtn">Enregistrer les réglages</button></div>
-        </form>
-      </div>
       </div>
       <div class="list" id="dbSp" data-dyn hidden></div>
     </div>
