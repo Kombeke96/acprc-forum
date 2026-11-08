@@ -22,7 +22,7 @@
 <title>RISK & COMPLIANCE ANNUAL FORUM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&display=swap">
 <style>
 /* Concept : fond crème chaleureux, halos dégradés flous, grandes cartes arrondies, navigation flottante en pilule. Marine et or de la charte gardés comme couleurs de marque. Thème unique voulu (charte ACPRC claire). */
 :root{
@@ -589,6 +589,109 @@ footer{padding:.5rem 0 1.2rem;margin-top:1rem;background:none}
 .spk-row .avatar svg{width:30px;height:30px}
 .spk-pills{display:flex;gap:.4rem;flex-wrap:wrap;margin:.2rem 0 .5rem}
 .spk-bio{font-size:.84rem;color:var(--muted);margin:.2rem 0 .5rem}
+
+/* ===== Couche de design 2 : marine dominant, cartes teintées, titres Bricolage ===== */
+:root{--display:'Bricolage Grotesque','Poppins',system-ui,sans-serif;--navy-2:#0d1f44;--navy-3:#16356d;--paper:#f6efe3}
+h1,h2,h3,.hero h1,.head h2{font-family:var(--display);letter-spacing:-.025em}
+h1,h2{font-weight:800}
+.card h3,.c h3,.person h3,.dc h3{font-family:var(--font)}
+.brand b{letter-spacing:.01em}
+
+/* Accueil : bloc marine arrondi */
+.hero{margin:.7rem clamp(.5rem,1.6vw,1.1rem) 0;border-radius:42px;background:linear-gradient(155deg,var(--navy-3) 0%,var(--navy-2) 72%);overflow:hidden;padding-block:3.2rem}
+.hero .b1{background:#d9a24a;opacity:.3;top:-160px;right:-100px}
+.hero .b2{background:#3f68c4;opacity:.32;top:240px;left:-180px}
+.hero .b3{background:#d9774a;opacity:.16;left:42%;top:-60px}
+.hero .dots{background:radial-gradient(circle,rgba(255,255,255,.13) 1.2px,transparent 1.5px) 0 0/24px 24px}
+.hero h1{color:#fff;font-size:clamp(2.4rem,7vw,4.8rem);line-height:1.02;letter-spacing:-.035em}
+.hero .lead{color:#c9d5ee}
+.hero .theme{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);color:#fff}
+.hero .eyebrow{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18);color:var(--gold-2);box-shadow:none}
+.hero .chip{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.16);color:#fff}
+.hero .chip svg{stroke:var(--gold-2)}
+.hero .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.42)}
+.hero .btn-ghost:hover{background:rgba(255,255,255,.1);box-shadow:none}
+.ticket{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);box-shadow:0 30px 80px rgba(0,0,0,.28)}
+.ticket::before{display:none}
+.ticket h2{color:#fff}
+.ticket small{color:#c9d5ee}
+.count div{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14)}
+.count b{color:var(--gold-2)}
+.mini-prices div{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16)}
+.mini-prices b{color:#fff}
+
+/* Sections : cartes teintées, mosaïque */
+section{padding-block:3rem}
+.head h2{font-size:clamp(1.9rem,4.6vw,3rem)}
+.cards{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.c{border:0;box-shadow:none;border-radius:30px;padding:1.7rem}
+.cards .c:nth-child(1){background:var(--navy);color:#fff}
+.cards .c:nth-child(1) h3{color:#fff}.cards .c:nth-child(1) p{color:#c9d5ee}
+.cards .c:nth-child(1) .icon{background:var(--gold-2)}
+.cards .c:nth-child(2){background:var(--peach)}
+.cards .c:nth-child(3){background:var(--sky)}
+.cards .c:nth-child(4){background:var(--paper)}
+.cards .c:nth-child(2) p,.cards .c:nth-child(3) p,.cards .c:nth-child(4) p{color:#47506a}
+.cards .c:nth-child(n+2) .icon{background:rgba(255,255,255,.6)}
+
+.prog-box{background:linear-gradient(160deg,var(--navy-3),var(--navy-2));border:0;box-shadow:0 30px 70px rgba(13,31,68,.28);border-radius:36px;padding:1rem}
+.prog li{color:#e4eafa}
+.prog li:nth-child(odd){background:rgba(255,255,255,.06)}
+.prog time{color:var(--gold-2)}
+.prog .key{background:linear-gradient(95deg,rgba(217,162,74,.32),rgba(217,162,74,.12))!important}
+.prog .key p{color:#fff}
+.prog .pause p{color:#aebbd6}
+
+.person{border:0;box-shadow:none;background:linear-gradient(165deg,var(--peach),var(--sky))}
+.person:nth-child(even){background:linear-gradient(165deg,var(--sky),var(--paper))}
+.soon{background:rgba(255,255,255,.55)}
+
+.dl{background:var(--paper);border:0;box-shadow:none}
+.dl div{border-color:rgba(19,45,94,.1)}
+details{background:var(--paper);border:0}
+details[open]{background:var(--sky)}
+summary::after{background:#fff}
+.price{background:var(--paper);box-shadow:none}
+.price.on{background:#fff3df}
+.step{background:var(--paper);border:0;box-shadow:none}
+.note,.wait{background:var(--peach)}
+
+/* Espace équipe */
+body.adm{background:#e6edf9}
+body.adm::before{background:#e6edf9}
+body.adm .blobs{display:none}
+.dside{background:linear-gradient(185deg,var(--navy-3),var(--navy-2));border:0;color:#fff;box-shadow:0 26px 60px rgba(13,31,68,.32)}
+.dside-who{border-color:rgba(255,255,255,.14)}
+.dside-who b{color:#fff}.dside-who span{color:#aebbd6}
+.dside nav a{color:#d6def0}
+.dside nav a:hover{background:rgba(255,255,255,.09)}
+.dside nav a[aria-current="page"]{background:var(--gold-2);color:var(--navy-2);font-weight:600}
+.dside-foot{border-color:rgba(255,255,255,.14)}
+.dside-foot a{color:#aebbd6}
+.dside-foot button{color:#fff;border-color:rgba(255,255,255,.28)}
+@media(max-width:959px){.dside nav a{background:rgba(255,255,255,.1)}.dside nav a[aria-current="page"]{background:var(--gold-2)}}
+
+/* Vue d'ensemble : cartes compactes en une rangée */
+#dbGrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:.8rem}
+#dbGrid .dg,#dbGrid .dg2{display:contents}
+@media(max-width:1100px){#dbGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){#dbGrid{grid-template-columns:1fr}}
+.dc{border:0;box-shadow:none;border-radius:24px;padding:1rem 1.15rem;gap:.35rem}
+.dc .big{font-size:2.3rem;letter-spacing:-.03em}
+.dc .sub{font-size:.78rem}
+#dbGrid .dg:nth-child(1) .dc{background:linear-gradient(140deg,#e9b95f,#c99a45)}
+#dbGrid .dg:nth-child(1) .dc h3,#dbGrid .dg:nth-child(1) .dc .sub{color:#4a3a14}#dbGrid .dg:nth-child(1) .dc .big{color:var(--navy-2)}
+#dbGrid .dg:nth-child(1) .dc .mbars i{background:var(--navy-2)}#dbGrid .dg:nth-child(1) .dc .mbars i.z{background:rgba(13,31,68,.22)}
+#dbGrid .dg:nth-child(2) .dc:first-child{background:var(--sky)}
+.dc.soft{background:var(--peach)}
+.ring svg{width:104px;height:104px}.ring b{font-size:1.5rem}
+.ring{margin:.1rem 0}
+.leg{font-size:.8rem;gap:.3rem}
+.stat,.stat.big{border:0;box-shadow:none}
+.card.fiche,.dc.cta{border:0}
+.sec-title{margin:1.6rem 0 .8rem}
+#dbFeed{margin:0}
+.card:has(#dbFeed){background:var(--paper);border:0;box-shadow:none;padding:.5rem 1rem;border-radius:26px}
 </style>
 </head>
 <body>
