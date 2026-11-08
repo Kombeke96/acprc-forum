@@ -1048,7 +1048,7 @@ body.adm .blobs{display:none}
           </div>
           <div class="row two">
             <div class="f"><label for="spkNom">Nom et prénom</label><input id="spkNom" type="text" maxlength="120" autocomplete="off"><div class="msg" aria-live="polite"></div></div>
-            <div class="f"><label for="spkStatut">Statut (emplacement sur le site)</label><select id="spkStatut"><option value="Keynote">Keynote</option><option value="Invité d'honneur">Invité d'honneur</option><option value="Table ronde">Table ronde</option><option value="Bureau Exécutif">Bureau Exécutif</option></select></div>
+            <div class="f"><label for="spkStatut">Statut</label><input id="spkStatut" type="text" maxlength="60" list="spkStatuts" value="Panéliste" autocomplete="off" placeholder="Ex. : Panéliste, Keynote…"><datalist id="spkStatuts"><option value="Keynote"><option value="Invité d'honneur"><option value="Panéliste"><option value="Table ronde"><option value="Modérateur"><option value="Bureau Exécutif"><option value="Intervenant"></datalist></div>
           </div>
           <div class="row two">
             <div class="f"><label for="spkFonction">Profession / fonction</label><input id="spkFonction" type="text" maxlength="160" autocomplete="off"></div>
@@ -2514,11 +2514,11 @@ body.adm .blobs{display:none}
   var SPK=[],spkEdit=null,spkBlob=null;
   function spkAvatar(host,url){host.innerHTML='';if(url){var i=document.createElement('img');i.src=url;i.alt='';host.appendChild(i)}else host.innerHTML=AVSVG}
   var SLOTS=['Keynote',"Invité d'honneur",'Table ronde','Bureau Exécutif'];
-  function spkSetStatut(v){var sel=$('spkStatut');v=v||'Keynote';if(!Array.prototype.some.call(sel.options,function(o){return o.value===v})){var o=document.createElement('option');o.value=o.textContent=v;sel.appendChild(o)}sel.value=v}
+  function spkSetStatut(v){$('spkStatut').value=v||'Panéliste'}
   function spkOpen(){$('spkModal').hidden=false;document.body.classList.add('reg-open');$('spkNom').focus()}
   function spkClose(){$('spkModal').hidden=true;document.body.classList.remove('reg-open');spkReset()}
   function spkReset(){
-    spkEdit=null;spkBlob=null;$('spkForm').reset();$('spkStatut').value='Keynote';
+    spkEdit=null;spkBlob=null;$('spkForm').reset();$('spkStatut').value='Panéliste';
     $('spkFormTitle').textContent=tr('Ajouter une personne');$('spkMsg').textContent='';spkAvatar($('spkAv'),null);spkRights();
   }
   function spkRights(){var o=can('accounts');$('spkPanel').disabled=!o;$('spkPanelNote').hidden=o}
@@ -2529,16 +2529,10 @@ body.adm .blobs{display:none}
   }
   function spkPaint(){
     var l=$('spkList');l.innerHTML='';
-    var groups=SLOTS.slice();SPK.forEach(function(x){if(groups.indexOf(x.statut)<0)groups.push(x.statut)});
-    groups.forEach(function(g){
-      var mem=SPK.filter(function(x){return x.statut===g}),shown=mem.filter(function(x){return x.en_panel}).length;
-      var h=mk('div','slot-h');h.appendChild(mk('h3',null,tr(g)));
-      h.appendChild(mk('span','pill '+(shown?'p-ok':'p-wait'),shown?shown+' '+tr('dévoilé(s)'):tr('Masqué jusqu’au jour J')));l.appendChild(h);
-      var add=mk('button','tile add');add.type='button';add.setAttribute('aria-label',tr('Ajouter une personne')+' : '+g);
-      add.appendChild(mk('span','plus','+'));add.appendChild(mk('b',null,tr('Ajouter une personne')));
-      add.addEventListener('click',function(){spkReset();spkSetStatut(g);spkOpen()});l.appendChild(add);
-      mem.forEach(spkTile);
-    });
+    var add=mk('button','tile add');add.type='button';add.setAttribute('aria-label',tr('Ajouter une personne'));
+    add.appendChild(mk('span','plus','+'));add.appendChild(mk('b',null,tr('Ajouter une personne')));
+    add.addEventListener('click',function(){spkReset();spkOpen()});l.appendChild(add);
+    SPK.forEach(spkTile);
   }
   function spkTile(x){
     var l=$('spkList');
