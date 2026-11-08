@@ -639,8 +639,6 @@ footer{padding:.5rem 0 1.2rem;margin-top:1rem;background:none}
   <div class="dside-who"><b id="sdName" data-dyn></b><span id="sdRole" data-dyn></span></div>
   <nav>
     <a href="#tableau" data-dsec="apercu">Vue d'ensemble</a>
-    <a href="#tableau" data-dsec="paiements">Paiements <i id="sdBadge" data-dyn hidden></i></a>
-    <a href="#tableau" data-dsec="inscrits">Inscrits</a>
     <a href="#orateurs" data-side="orateurs" data-need="speakers">Intervenants</a>
     <a href="#comptes" data-side="comptes" data-need="accounts">Équipe</a>
     <a href="#tableau" data-dsec="reglages" data-need="accounts">Réglages</a>
@@ -885,22 +883,13 @@ footer{padding:.5rem 0 1.2rem;margin-top:1rem;background:none}
     <div class="blobs" aria-hidden="true"><div class="dots"></div><div class="blob b1"></div></div>
     <div class="wrap">
       <div class="head"><span class="eyebrow"><i></i> Espace équipe</span><h1 style="font-size:clamp(1.8rem,4.6vw,2.8rem);letter-spacing:-.02em">Tableau de <span class="grad">bord</span></h1><p id="dbSub" data-dyn></p></div>
-      <div class="cta-row" style="margin-bottom:1.2rem"><button class="btn btn-sm" id="dbRefresh" type="button">Actualiser</button><button class="btn btn-sm btn-ghost" id="dbCheck" type="button" hidden>Contrôler la base</button><button class="btn btn-sm btn-ghost" id="dbExport" type="button">Exporter en Excel</button></div>
+      <div class="cta-row" style="margin-bottom:1.2rem"><button class="btn btn-sm" id="dbRefresh" type="button">Actualiser</button></div>
       <div class="note" id="dbMsg" hidden data-dyn style="margin-bottom:1rem"></div>
       <div class="note" id="dbDiag" hidden data-dyn style="margin-bottom:1rem"></div>
       <div data-sec="apercu">
         <div id="dbGrid" data-dyn></div>
         <h2 class="sec-title">Activité récente</h2>
         <div class="card"><ul class="feed" id="dbFeed" data-dyn></ul></div>
-      </div>
-      <div data-sec="paiements" hidden>
-        <h2 class="sec-title" style="margin-top:0">Paiements en attente</h2>
-        <div class="list" id="dbPay" data-dyn></div>
-      </div>
-      <div data-sec="inscrits" hidden>
-        <h2 class="sec-title" style="margin-top:0">Inscrits</h2>
-        <div class="f" style="max-width:380px"><label for="dbQ">Rechercher</label><input id="dbQ" type="search" placeholder="Nom, e-mail ou n° de bordereau" autocomplete="off"></div>
-        <div class="dwrap"><table class="dtbl"><thead><tr><th>N° bordereau</th><th>Nom et prénom</th><th>E-mail</th><th>Membre</th><th>Tarif (FCFA)</th><th>Inscription</th><th>Paiement</th></tr></thead><tbody id="dbRows" data-dyn></tbody></table></div>
       </div>
       <div data-sec="reglages" hidden>
         <div class="card fiche" id="dbSet" hidden style="margin-bottom:1.2rem">
@@ -2243,15 +2232,14 @@ footer{padding:.5rem 0 1.2rem;margin-top:1rem;background:none}
     var c3=card('','Montant confirmé');var b3=mk('div','big',num(got));b3.appendChild(mk('small',null,' FCFA'));c3.appendChild(b3);c3.appendChild(mk('p','sub',tr('Attendu')+' : '+num(expected)+' FCFA'));g1.appendChild(c3);
     grid.appendChild(g1);
     var g2=mk('div','dg');
-    var c4=card('','Places confirmées');var rg=mk('div','ring');rg.innerHTML='<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" fill="none" stroke="#e9eef8" stroke-width="12"/><circle cx="60" cy="60" r="52" fill="none" stroke="#d9a24a" stroke-width="12" stroke-linecap="round" stroke-dasharray="'+(pc*3.2673).toFixed(1)+' 326.7"/></svg>';var rb=mk('b',null,String(pc));rb.appendChild(mk('small',null,' %'));rg.appendChild(rb);c4.appendChild(rg);
+    var c4=card('','Places confirmées');var rg=mk('div','ring');rg.innerHTML='<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" fill="none" stroke="#e9eef8" stroke-width="12"/><circle cx="60" cy="60" r="52" fill="none" stroke="#d9a24a" stroke-width="12" '+(pc?'stroke-linecap="round" ':'')+'stroke-dasharray="'+(pc*3.2673).toFixed(1)+' 326.7"/></svg>';var rb=mk('b',null,String(pc));rb.appendChild(mk('small',null,' %'));rg.appendChild(rb);c4.appendChild(rg);
     var lg=mk('div','leg');[['g',tr('Confirmées'),paid.length],['',tr('Restantes'),seats]].forEach(function(x){var d=mk('div');d.appendChild(mk('i',x[0]));d.appendChild(mk('em',null,x[1]));d.appendChild(mk('span',null,String(x[2])));lg.appendChild(d)});c4.appendChild(lg);g2.appendChild(c4);
     var c5=card('','Profil des inscrits');var mp=reg.length?Math.round(members/reg.length*100):0;var b5=mk('div','big',String(mp));b5.appendChild(mk('small',null,' % '+tr('de membres ACPRC')));c5.appendChild(b5);
     [[tr('Membres ACPRC'),members,'g'],[tr('Non membres'),reg.length-members,'']].forEach(function(x){var w=mk('div');w.style.cssText='display:grid;gap:.3rem;margin-top:.7rem';var t=mk('div','sub',x[0]+' · '+x[1]);var hb=mk('div','hbar');var bi=document.createElement('i');bi.className=x[2];bi.style.width=(reg.length?Math.round(x[1]/reg.length*100):0)+'%';hb.appendChild(bi);w.appendChild(t);w.appendChild(hb);c5.appendChild(w)});g2.appendChild(c5);
-    var c6=card('dark','Paiements en attente');c6.appendChild(mk('div','big',String(toCheck.length)));c6.appendChild(mk('p','sub',tr(toCheck.length?'Ces paiements seront confirmés automatiquement par l’API de paiement.':'Aucun paiement en attente.')));var ob=mk('button','btn btn-sm light',tr('Voir la liste'));ob.type='button';ob.addEventListener('click',function(){document.querySelector('#dside [data-dsec="paiements"]').click()});c6.appendChild(ob);g2.appendChild(c6);
+    var c6=card('dark','Paiements en attente');c6.appendChild(mk('div','big',String(toCheck.length)));c6.appendChild(mk('p','sub',tr(toCheck.length?'Ces paiements seront confirmés automatiquement par l’API de paiement.':'Aucun paiement en attente.')));g2.appendChild(c6);
     grid.appendChild(g2);
     var g3=mk('div','dg2');
     var c7=card('soft',"Liste d'attente");c7.appendChild(mk('div','big',String(liste)));c7.appendChild(mk('p','sub',tr('Personnes inscrites après la complétude des places.')));g3.appendChild(c7);
-    var c8=card('cta','Exporter les inscrits et les paiements');c8.appendChild(mk('p','sub',tr('Un fichier Excel prêt pour la préparation du forum.')));var eb=mk('button','btn btn-sm light',tr('Exporter en Excel'));eb.type='button';eb.addEventListener('click',function(){$('dbExport').click()});c8.appendChild(eb);g3.appendChild(c8);
     grid.appendChild(g3);
     /* activité récente */
     var ev=[];
