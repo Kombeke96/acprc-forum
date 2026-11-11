@@ -1,15 +1,5 @@
 {
   "cleanUrls": true,
-  "rewrites": [
-    {
-      "source": "/paiement-retour/:ref",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/paiement-retour",
-      "destination": "/index.html"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
