@@ -140,8 +140,8 @@ a{color:inherit}
 .par-view{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}.par-view::-webkit-scrollbar{display:none}
 .par-track{display:flex;align-items:center;justify-content:center;width:max-content;min-width:100%}
 .par-it{flex:none;height:76px;padding:0 1.7rem;display:grid;place-items:center}
-.par-it img{max-height:54px;max-width:160px;width:auto;height:auto;object-fit:contain;filter:grayscale(1);opacity:.78;transition:filter .25s,opacity .25s}.par-it:hover img{filter:none;opacity:1}
-.par-track.run{justify-content:flex-start;animation:parRun var(--d,30s) linear infinite}.par-view:hover .par-track.run{animation-play-state:paused}
+.par-it{pointer-events:none;user-select:none;-webkit-user-select:none;cursor:default}.par-it img{max-height:54px;max-width:160px;width:auto;height:auto;object-fit:contain;-webkit-user-drag:none}
+.par-track.run{justify-content:flex-start;animation:parRun var(--d,30s) linear infinite}
 @keyframes parRun{to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){.par-track.run{animation:none}}
 .par-grp{margin:1.4rem 0 0}.par-t{text-align:center;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 .7rem}
@@ -2949,7 +2949,7 @@ body.adm .blobs{display:none}
   function parUrl(p){return p?SB_BASE()+'/storage/v1/object/public/partenaires/'+encodeURI(p):null}
   function parRender(list){
     var box=$('parBox'),sec=$('partenaires');box.innerHTML='';box.classList.remove('run');box.style.removeProperty('--d');sec.hidden=!list.length;if(!list.length)return;
-    function item(x,clone){var w=mk('div','par-it');if(clone)w.setAttribute('aria-hidden','true');var im=mk('img');im.src=parUrl(x.logo_path);im.alt=clone?'':x.org;im.title=x.org;w.appendChild(im);return w}
+    function item(x,clone){var w=mk('div','par-it');if(clone)w.setAttribute('aria-hidden','true');var im=mk('img');im.src=parUrl(x.logo_path);im.alt=clone?'':x.org;im.draggable=false;w.appendChild(im);return w}
     list.forEach(function(x){box.appendChild(item(x,false))});
     function fit(){
       var view=box.parentNode;if(box.classList.contains('run')||!box.offsetParent)return;
