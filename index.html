@@ -1466,29 +1466,36 @@ body.adm .blobs{display:none}
     txt('FACTURE PRO-FORMA',130,92,22,true,'#e7c779');
     txt('N° '+P.numero,W-36,66,13,true,'#ffffff','right');txt('Date : '+P.date,W-36,84,10.5,false,'#d6def0','right');
     /* identifiant / quota */
-    rect(36,152,W-72,86,'#f6efe3');rect(36,152,5,86,GOLD);
-    txt('IDENTIFIANT DU PARTICIPANT',56,175,9.5,true,MUTED);
-    txt(P.bordereau||'—',56,210,26,true,NAVY);
-    txt(P.waitlist?'Liste d’attente':'Place n° '+P.rang+' / 100',W-56,205,22,true,NAVY,'right');
-    txt(P.waitlist?'Aucun règlement tant qu’une place n’est pas confirmée':'Quota du forum : 100 places',W-56,224,9.5,false,MUTED,'right');
+    rect(36,150,W-72,72,'#f6efe3');rect(36,150,5,72,GOLD);
+    txt('IDENTIFIANT DU PARTICIPANT',56,171,9.5,true,MUTED);
+    txt(P.bordereau||'—',56,203,26,true,NAVY);
+    txt(P.waitlist?'Liste d’attente':(P.membre==='Oui'?'Membre de l’ACPRC':'Non-membre'),W-56,196,18,true,NAVY,'right');
+    txt(P.waitlist?'Aucun règlement tant qu’une place n’est pas confirmée':(P.membre==='Oui'?'Tarif membre':'Tarif non-membre'),W-56,214,9.5,false,MUTED,'right');
     /* coordonnées */
-    var y=268;txt('COORDONNÉES DU PARTICIPANT',36,y,10,true,GOLD);line(36,y+7,W-36,'#dfe5f1');y+=28;
+    var y=250;txt('COORDONNÉES DU PARTICIPANT',36,y,10,true,GOLD);line(36,y+7,W-36,'#dfe5f1');y+=25;
     [['Nom et prénom',P.nom],['E-mail',P.email],['Téléphone',P.tel],['Organisation',P.org],['Fonction',P.fonction],['Secteur d’activité',P.secteur],['Statut',P.membre==='Oui'?'Membre de l’ACPRC':'Non-membre']].forEach(function(r){
-      txt(r[0],36,y,10.5,false,MUTED);y=Math.max(wrap(r[1]||'—',190,y,W-226,11,14,'#15213b',true),y+14)+7});
+      txt(r[0],36,y,10.5,false,MUTED);y=Math.max(wrap(r[1]||'—',190,y,W-226,11,14,'#15213b',true),y+14)+5});
     /* désignation / montant */
     y+=8;rect(36,y,W-72,24,NAVY);txt('Désignation',48,y+16,10,true,'#ffffff');txt('Montant (FCFA)',W-48,y+16,10,true,'#ffffff','right');y+=24;
-    rect(36,y,W-72,50,'#f4f7fd');
+    rect(36,y,W-72,44,'#f4f7fd');
     wrap('Participation au RISK & COMPLIANCE ANNUAL FORUM, 1ère édition ('+(P.membre==='Oui'?'tarif membre ACPRC':'tarif non-membre')+')',48,y+19,W-210,10.5,14,'#15213b',false);
-    txt(P.tarif,W-48,y+30,13,true,NAVY,'right');y+=50;
-    rect(36,y,W-72,32,GOLD);txt('MONTANT À RÉGLER',48,y+21,11,true,NAVY);txt(P.tarif+' FCFA',W-48,y+22,15,true,NAVY,'right');y+=62;
+    txt(P.tarif,W-48,y+27,13,true,NAVY,'right');y+=44;
+    rect(36,y,W-72,32,GOLD);txt('MONTANT À RÉGLER',48,y+21,11,true,NAVY);txt(P.tarif+' FCFA',W-48,y+22,15,true,NAVY,'right');y+=58;
     /* lieu */
-    txt('LIEU ET DATE',36,y,10,true,GOLD);line(36,y+7,W-36,'#dfe5f1');y+=26;
-    txt('Vendredi 5 février 2027 · 09h00 – 13h00 (accueil dès 08h30)',36,y,11,true,NAVY);y+=17;
-    txt('Élite Offices, Akwa, Douala · Cameroun · Présentiel',36,y,11,false,'#15213b');y+=30;
+    txt('LIEU ET DATE',36,y,10,true,GOLD);line(36,y+7,W-36,'#dfe5f1');y+=24;
+    txt('Vendredi 5 février 2027 · 09h00 – 13h00 (accueil dès 08h30)',36,y,11,true,NAVY);y+=15;
+    txt('Élite Offices, Akwa, Douala · Cameroun · Présentiel',36,y,11,false,'#15213b');y+=26;
+    /* coordonnées bancaires (si le virement est proposé) */
+    if(BANK.iban){
+      txt('COORDONNÉES POUR UN VIREMENT BANCAIRE',36,y,10,true,GOLD);line(36,y+7,W-36,'#dfe5f1');y+=23;
+      [[['Bénéficiaire',BANK.holder],['Banque',BANK.bank]],[['RIB / IBAN',BANK.iban],['SWIFT / BIC',BANK.swift]],[['Montant',P.tarif+' FCFA'],['Référence',P.bordereau||'']]].forEach(function(pair){
+        pair.forEach(function(c,k){var x=k?318:36;if(!c[1])return;txt(c[0],x,y,9.5,false,MUTED);txt(c[1],x+78,y,10.5,true,'#15213b')});y+=16});
+      y+=8;
+    }
     /* message */
-    rect(36,y,W-72,118,'#f6efe3');
+    rect(36,y,W-72,106,'#f6efe3');
     txt('Un mot de l’ACPRC',52,y+24,12,true,NAVY);
-    wrap('Chère participante, cher participant, l’ACPRC vous remercie de votre inscription au RISK & COMPLIANCE ANNUAL FORUM et se réjouit de vous accueillir le 5 février 2027 à Élite Offices, Akwa, Douala. Votre identifiant ci-dessus atteste de votre place parmi les 100 participants du forum. Ce pro-forma n’a pas valeur de facture : votre facture définitive, qui certifie votre place, vous est remise dès la confirmation de votre paiement. À très bientôt !',52,y+44,W-104,10.5,15,'#15213b',false);
+    wrap('Chère participante, cher participant, l’ACPRC vous remercie de votre inscription au RISK & COMPLIANCE ANNUAL FORUM et se réjouit de vous accueillir le 5 février 2027 à Élite Offices, Akwa, Douala. Ce pro-forma n’a pas valeur de facture : votre facture définitive vous est remise dès la confirmation de votre paiement. À très bientôt !',52,y+44,W-104,10.5,15,'#15213b',false);
     /* pied */
     rect(0,H-52,W,52,NAVY);
     txt('ACPRC · contact@acprc-global.org · +237 6 77 17 12 13 / 6 79 59 21 68',W/2,H-28,9.5,false,'#d6def0','center');
