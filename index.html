@@ -1150,7 +1150,7 @@ body.adm .blobs{display:none}
   <div class="page">
     <div class="blobs" aria-hidden="true"><div class="dots"></div><div class="blob b1"></div></div>
     <div class="wrap">
-      <div class="head"><span class="eyebrow"><i></i> Arrière-plan · équipe</span><h1 style="font-size:clamp(1.8rem,4.6vw,2.8rem);letter-spacing:-.02em"><span class="grad">Partenaires</span></h1><p>Ajoutez le logo des organisations qui accompagnent le forum. Il apparaît aussitôt dans la section « Ils nous accompagnent » de l'accueil.</p></div>
+      <div class="head"><span class="eyebrow"><i></i> Arrière-plan · équipe</span><h1 style="font-size:clamp(1.8rem,4.6vw,2.8rem);letter-spacing:-.02em"><span class="grad">Partenaires</span></h1><p>Ajoutez le nom et le logo des organisations qui accompagnent le forum. Ils apparaissent aussitôt dans la section « Ils nous accompagnent » de l'accueil.</p></div>
       <div class="team" id="parList" data-dyn></div>
       <div class="reg-modal" id="parModal" hidden role="dialog" aria-modal="true">
         <div class="reg-back" id="parBack"></div>
@@ -1160,10 +1160,7 @@ body.adm .blobs{display:none}
             <h2 class="fiche-t">Ajouter un partenaire</h2>
             <form id="parForm" novalidate>
               <div class="f"><label for="parOrg">Nom de l'organisation</label><input id="parOrg" type="text" maxlength="120" autocomplete="off"><div class="msg" aria-live="polite"></div></div>
-              <div class="row two">
-                <div class="f"><label for="parTier">Catégorie</label><select id="parTier"><option>Partenaire principal</option><option selected>Partenaire officiel</option><option>Soutien institutionnel</option><option>Partenaire média</option></select></div>
-                <div class="f"><label for="parSite">Site web (facultatif)</label><input id="parSite" type="url" maxlength="200" placeholder="https://…" autocomplete="off"></div>
-              </div>
+              <div class="f"><label for="parSite">Site web (facultatif)</label><input id="parSite" type="url" maxlength="200" placeholder="https://…" autocomplete="off"></div>
               <div class="f"><label for="parFile">Logo</label><input id="parFile" type="file" accept="image/png,image/jpeg,image/webp"><p class="fine" style="text-align:left">PNG, JPEG ou WebP. Fond transparent de préférence ; le logo est réduit automatiquement.</p></div>
               <div id="parPrev" data-dyn style="text-align:center;margin:.4rem 0"></div>
               <div class="msg" id="parMsg" aria-live="polite" data-dyn></div>
@@ -2866,14 +2863,12 @@ body.adm .blobs{display:none}
   function parUrl(p){return p?SB_BASE()+'/storage/v1/object/public/partenaires/'+encodeURI(p):null}
   function parRender(list){
     var box=$('parBox'),sec=$('partenaires');box.innerHTML='';sec.hidden=!list.length;if(!list.length)return;
-    PAR_T.forEach(function(t){
-      var g=list.filter(function(x){return x.tier===t});if(!g.length)return;
-      var w=mk('div','par-grp');w.appendChild(mk('p','par-t',tr(t)));var row=mk('div','par-row');
-      g.forEach(function(x){
-        var wrap=/^https:\/\//.test(x.site_url||'')?mk('a','par-logo'+(t==='Partenaire principal'?' main':'')):mk('div','par-logo'+(t==='Partenaire principal'?' main':''));
-        if(wrap.tagName==='A'){wrap.href=x.site_url;wrap.target='_blank';wrap.rel='noopener noreferrer'}
-        var im=mk('img');im.src=parUrl(x.logo_path);im.alt=x.org;im.loading='lazy';wrap.appendChild(im);row.appendChild(wrap)});
-      w.appendChild(row);box.appendChild(w)});
+    var row=mk('div','par-row');
+    list.forEach(function(x){
+      var wrap=/^https:\/\//.test(x.site_url||'')?mk('a','par-logo'):mk('div','par-logo');
+      if(wrap.tagName==='A'){wrap.href=x.site_url;wrap.target='_blank';wrap.rel='noopener noreferrer';wrap.title=x.org}
+      var im=mk('img');im.src=parUrl(x.logo_path);im.alt=x.org;im.loading='lazy';wrap.appendChild(im);row.appendChild(wrap)});
+    box.appendChild(row);
   }
   function parLoad(){
     if(!sbOn())return;
@@ -2891,7 +2886,7 @@ body.adm .blobs{display:none}
     add.addEventListener('click',function(){parReset();parOpen()});l.appendChild(add);
     PAR.forEach(function(x){
       var it=mk('div','tile par'),im=mk('img','plg');im.src=parUrl(x.logo_path);im.alt=x.org;it.appendChild(im);
-      it.appendChild(mk('h3',null,x.org));var pl=mk('div','spk-pills');pl.appendChild(mk('span','pill p-wait',tr(x.tier)));it.appendChild(pl);
+      it.appendChild(mk('h3',null,x.org));if(/^https:\/\//.test(x.site_url||''))it.appendChild(mk('p','fine',x.site_url.replace(/^https:\/\//,'')));
       var dl=mk('button','del','×');dl.type='button';dl.title=tr('Retirer ce partenaire ?');dl.setAttribute('aria-label',tr('Retirer ce partenaire ?'));
       dl.addEventListener('click',function(){if(!confirm(tr('Retirer ce partenaire ?')))return;dl.disabled=true;
         rpcA('remove_sponsor',{id:x.id}).then(function(j){var p=(j&&j.logo_path)||x.logo_path;if(p)fetch(SB_BASE()+'/storage/v1/object/partenaires/'+encodeURI(p),{method:'DELETE',headers:aH({},AUTH.tok)}).catch(function(){});toast('Partenaire retiré.');parAdminLoad();parLoad()}).catch(function(){dl.disabled=false;toast('Action impossible pour le moment.')})});
@@ -2921,7 +2916,7 @@ body.adm .blobs{display:none}
     b.disabled=true;m.textContent='';
     fetch(SB_BASE()+'/storage/v1/object/partenaires/logos/'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.png',{method:'POST',headers:aH({'Content-Type':'image/png'},AUTH.tok),body:parBlob})
       .then(function(r){if(!r.ok)throw new Error('upload');return r.json()})
-      .then(function(j){var path=String(j.Key||'').replace(/^partenaires\//,'');return rpcA('add_sponsor',{org:org,tier:$('parTier').value,site_url:site,logo_path:path})})
+      .then(function(j){var path=String(j.Key||'').replace(/^partenaires\//,'');return rpcA('add_sponsor',{org:org,tier:'Partenaire',site_url:site,logo_path:path})})
       .then(function(){toast('Partenaire ajouté.');parClose();parAdminLoad();parLoad()})
       .catch(function(){m.style.color='var(--err,#b3261e)';m.textContent=tr('Ajout impossible. Vérifiez la connexion et vos droits.')})
       .then(function(){b.disabled=false});
