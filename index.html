@@ -135,6 +135,15 @@ a{color:inherit}
 @media print{body *{visibility:hidden}#pfOut,#pfOut *{visibility:visible}#pfOut{position:absolute;left:0;top:0;width:100%}#pfOut .noprint{display:none}.invoice{border:0}}
 
 /* Équipe : profils */
+.par-strip{padding:1.4rem 0 .4rem}.par-strip[hidden]{display:none}
+.par-lab{margin:0 0 .5rem;text-align:center;font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.par-view{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}.par-view::-webkit-scrollbar{display:none}
+.par-track{display:flex;align-items:center;justify-content:center;width:max-content;min-width:100%}
+.par-it{flex:none;height:76px;padding:0 1.7rem;display:grid;place-items:center}
+.par-it img{max-height:54px;max-width:160px;width:auto;height:auto;object-fit:contain;filter:grayscale(1);opacity:.78;transition:filter .25s,opacity .25s}.par-it:hover img{filter:none;opacity:1}
+.par-track.run{justify-content:flex-start;animation:parRun var(--d,30s) linear infinite}.par-view:hover .par-track.run{animation-play-state:paused}
+@keyframes parRun{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.par-track.run{animation:none}}
 .par-grp{margin:1.4rem 0 0}.par-t{text-align:center;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 .7rem}
 .par-row{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center}
 .par-logo{background:#fff;border:1px solid rgba(19,45,94,.12);border-radius:20px;min-width:150px;height:92px;padding:.9rem 1.3rem;display:grid;place-items:center;box-shadow:0 8px 22px rgba(19,45,94,.06);transition:transform .2s,box-shadow .2s}
@@ -866,6 +875,13 @@ body.adm .blobs{display:none}
     </div>
   </div>
 
+  <section id="partenaires" class="par-strip" hidden aria-label="Ils nous accompagnent">
+    <div class="wrap">
+      <p class="par-lab">Ils nous accompagnent</p>
+      <div class="par-view"><div class="par-track" id="parBox" data-dyn></div></div>
+    </div>
+  </section>
+
   <section id="pourquoi">
     <div class="wrap">
       <div class="head"><span class="eyebrow"><i></i> Pourquoi participer</span><h2>Une matinée pour faire avancer votre pratique</h2></div>
@@ -902,13 +918,6 @@ body.adm .blobs{display:none}
     <div class="wrap">
       <div class="head"><span class="eyebrow"><i></i> Intervenants</span><h2>Ceux qui portent le forum</h2><p>Noms, fonctions et photos sont publiés au fur et à mesure des confirmations.</p></div>
       <div class="people" id="peopleBox" data-dyn></div>
-    </div>
-  </section>
-
-  <section id="partenaires" hidden>
-    <div class="wrap">
-      <div class="head"><span class="eyebrow"><i></i> Partenaires</span><h2>Ils nous accompagnent</h2><p>Merci aux organisations qui soutiennent la 1ère édition du forum.</p></div>
-      <div id="parBox" data-dyn></div>
     </div>
   </section>
 
@@ -2939,12 +2948,17 @@ body.adm .blobs{display:none}
   var PAR=[],PAR_T=['Partenaire principal','Partenaire officiel','Soutien institutionnel','Partenaire média'],parBlob=null;
   function parUrl(p){return p?SB_BASE()+'/storage/v1/object/public/partenaires/'+encodeURI(p):null}
   function parRender(list){
-    var box=$('parBox'),sec=$('partenaires');box.innerHTML='';sec.hidden=!list.length;if(!list.length)return;
-    var row=mk('div','par-row');
-    list.forEach(function(x){
-      var wrap=mk('div','par-logo');
-      var im=mk('img');im.src=parUrl(x.logo_path);im.alt=x.org;im.loading='lazy';wrap.appendChild(im);row.appendChild(wrap)});
-    box.appendChild(row);
+    var box=$('parBox'),sec=$('partenaires');box.innerHTML='';box.classList.remove('run');box.style.removeProperty('--d');sec.hidden=!list.length;if(!list.length)return;
+    function item(x,clone){var w=mk('div','par-it');if(clone)w.setAttribute('aria-hidden','true');var im=mk('img');im.src=parUrl(x.logo_path);im.alt=clone?'':x.org;im.title=x.org;w.appendChild(im);return w}
+    list.forEach(function(x){box.appendChild(item(x,false))});
+    function fit(){
+      var view=box.parentNode;if(box.classList.contains('run')||!box.offsetParent)return;
+      if(box.scrollWidth>view.clientWidth+2&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){
+        list.forEach(function(x){box.appendChild(item(x,true))});box.style.setProperty('--d',(list.length*5)+'s');box.classList.add('run')}
+    }
+    var imgs=box.querySelectorAll('img'),left=imgs.length;
+    function one(){if(--left<=0)fit()}
+    imgs.forEach(function(i){if(i.complete)one();else{i.addEventListener('load',one);i.addEventListener('error',one)}});setTimeout(fit,2500);
   }
   function parLoad(){
     if(!sbOn())return;
