@@ -1160,7 +1160,6 @@ body.adm .blobs{display:none}
             <h2 class="fiche-t">Ajouter un partenaire</h2>
             <form id="parForm" novalidate>
               <div class="f"><label for="parOrg">Nom de l'organisation</label><input id="parOrg" type="text" maxlength="120" autocomplete="off"><div class="msg" aria-live="polite"></div></div>
-              <div class="f"><label for="parSite">Site web (facultatif)</label><input id="parSite" type="url" maxlength="200" placeholder="https://…" autocomplete="off"></div>
               <div class="f"><label for="parFile">Logo</label><input id="parFile" type="file" accept="image/png,image/jpeg,image/webp"><p class="fine" style="text-align:left">PNG, JPEG ou WebP. Fond transparent de préférence ; le logo est réduit automatiquement.</p></div>
               <div id="parPrev" data-dyn style="text-align:center;margin:.4rem 0"></div>
               <div class="msg" id="parMsg" aria-live="polite" data-dyn></div>
@@ -2865,8 +2864,7 @@ body.adm .blobs{display:none}
     var box=$('parBox'),sec=$('partenaires');box.innerHTML='';sec.hidden=!list.length;if(!list.length)return;
     var row=mk('div','par-row');
     list.forEach(function(x){
-      var wrap=/^https:\/\//.test(x.site_url||'')?mk('a','par-logo'):mk('div','par-logo');
-      if(wrap.tagName==='A'){wrap.href=x.site_url;wrap.target='_blank';wrap.rel='noopener noreferrer';wrap.title=x.org}
+      var wrap=mk('div','par-logo');
       var im=mk('img');im.src=parUrl(x.logo_path);im.alt=x.org;im.loading='lazy';wrap.appendChild(im);row.appendChild(wrap)});
     box.appendChild(row);
   }
@@ -2886,7 +2884,7 @@ body.adm .blobs{display:none}
     add.addEventListener('click',function(){parReset();parOpen()});l.appendChild(add);
     PAR.forEach(function(x){
       var it=mk('div','tile par'),im=mk('img','plg');im.src=parUrl(x.logo_path);im.alt=x.org;it.appendChild(im);
-      it.appendChild(mk('h3',null,x.org));if(/^https:\/\//.test(x.site_url||''))it.appendChild(mk('p','fine',x.site_url.replace(/^https:\/\//,'')));
+      it.appendChild(mk('h3',null,x.org));
       var dl=mk('button','del','×');dl.type='button';dl.title=tr('Retirer ce partenaire ?');dl.setAttribute('aria-label',tr('Retirer ce partenaire ?'));
       dl.addEventListener('click',function(){if(!confirm(tr('Retirer ce partenaire ?')))return;dl.disabled=true;
         rpcA('remove_sponsor',{id:x.id}).then(function(j){var p=(j&&j.logo_path)||x.logo_path;if(p)fetch(SB_BASE()+'/storage/v1/object/partenaires/'+encodeURI(p),{method:'DELETE',headers:aH({},AUTH.tok)}).catch(function(){});toast('Partenaire retiré.');parAdminLoad();parLoad()}).catch(function(){dl.disabled=false;toast('Action impossible pour le moment.')})});
@@ -2908,10 +2906,9 @@ body.adm .blobs{display:none}
   });
   $('parForm').addEventListener('submit',function(e){
     e.preventDefault();if(!can('partners'))return;
-    var org=$('parOrg').value.trim(),m=$('parMsg'),b=$('parBtn'),site=$('parSite').value.trim();
+    var org=$('parOrg').value.trim(),m=$('parMsg'),b=$('parBtn'),site='';
     if(org.length<2){setErr($('parOrg'),'Indiquez le nom de l’organisation.');$('parOrg').focus();return}
     setErr($('parOrg'),'');
-    if(site&&!/^https:\/\/\S+$/i.test(site)){m.style.color='var(--err,#b3261e)';m.textContent=tr('Le site doit commencer par https://');return}
     if(!parBlob){m.style.color='var(--err,#b3261e)';m.textContent=tr('Ajoutez le logo du partenaire.');return}
     b.disabled=true;m.textContent='';
     fetch(SB_BASE()+'/storage/v1/object/partenaires/logos/'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.png',{method:'POST',headers:aH({'Content-Type':'image/png'},AUTH.tok),body:parBlob})
