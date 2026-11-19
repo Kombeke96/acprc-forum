@@ -1072,7 +1072,7 @@ body.adm .blobs{display:none}
   <div class="page">
     <div class="blobs" aria-hidden="true"><div class="dots"></div><div class="blob b1"></div></div>
     <div class="wrap">
-      <div class="head"><span class="eyebrow"><i></i> Espace équipe</span><h1 style="font-size:clamp(1.8rem,4.6vw,2.8rem);letter-spacing:-.02em">Tableau de <span class="grad">bord</span></h1><p id="dbSub" data-dyn></p></div>
+      <div class="head"><span class="eyebrow"><i></i> Espace équipe</span><h1 style="font-size:clamp(1.8rem,4.6vw,2.8rem);letter-spacing:-.02em">Tableau de <span class="grad">bord</span></h1></div>
       <div class="cta-row" style="margin-bottom:1.2rem"><button class="btn btn-sm" id="dbRefresh" type="button">Actualiser</button><button class="btn btn-sm btn-ghost" id="dbHist" type="button">Historique</button><button class="btn btn-sm btn-ghost" id="dbExport" type="button">Exporter en Excel</button></div>
       <div class="note" id="dbMsg" hidden data-dyn style="margin-bottom:1rem"></div>
       <div class="note" id="dbDiag" hidden data-dyn style="margin-bottom:1rem"></div>
@@ -2697,7 +2697,6 @@ body.adm .blobs{display:none}
     var toCheck=reg.filter(function(r){return r.statut==='attente'&&!S.ok[r.bordereau]}).map(function(r){return {nom:r.nom,email:r.email,mode:'Virement bancaire',tarif:r.tarif,bordereau:r.bordereau,created_at:r.created_at,registration_id:r.id,proof_path:null}});
     var members=reg.filter(function(r){return r.membre}).length;
     var spSum=0;D.sp.forEach(function(s){spSum+=s.montant||0});
-    $('dbSub').textContent=tr('Données lues dans Supabase à')+' '+fdate(D.at)+'.';
     var cap=paid.length+seats,pc=cap?Math.min(100,Math.round(paid.length/cap*100)):0;
     var bd=$('sdBadge');bd.textContent=toCheck.length;bd.hidden=!toCheck.length;
     var days=[],mx=0,i7;for(i7=6;i7>=0;i7--){var d0=new Date();d0.setHours(0,0,0,0);d0.setDate(d0.getDate()-i7);var n0=0;reg.forEach(function(r){var t=new Date(r.created_at);t.setHours(0,0,0,0);if(t.getTime()===d0.getTime())n0++});days.push(n0);if(n0>mx)mx=n0}
