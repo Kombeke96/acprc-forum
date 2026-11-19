@@ -2949,13 +2949,23 @@ body.adm .blobs{display:none}
   /* ---- partenaires : logos ajoutés par l'équipe, affichés sur l'accueil ---- */
   var PAR=[],PAR_T=['Partenaire principal','Partenaire officiel','Soutien institutionnel','Partenaire média'],parBlob=null;
   function parUrl(p){return p?SB_BASE()+'/storage/v1/object/public/partenaires/'+encodeURI(p):null}
+  /* logos par défaut (génériques, à la charte ACPRC) : remplacés un à un par les vrais logos ajoutés */
+  var PAR_DEF_N=8;
+  function parDef(i){
+    var C=['#132D5E','#AF8B3F','#16356d','#d9a24a'],c=C[i%4],d=C[(i+1)%4],W=['VOTRE','LOGO','PARTENAIRE','VOTRE','LOGO','PARTENAIRE','VOTRE','LOGO'][i%8];
+    var m=[ '<circle cx="22" cy="25" r="14" fill="'+c+'"/><circle cx="32" cy="25" r="9" fill="'+d+'" opacity=".85"/>',
+            '<rect x="8" y="11" width="28" height="28" rx="7" fill="'+c+'"/><rect x="20" y="19" width="16" height="16" rx="5" fill="'+d+'" opacity=".9"/>',
+            '<path d="M22 8 38 38H6z" fill="'+c+'"/><path d="M22 20 31 38H13z" fill="'+d+'" opacity=".9"/>',
+            '<path d="M8 25a14 14 0 0 1 28 0z" fill="'+c+'"/><rect x="8" y="29" width="28" height="8" rx="4" fill="'+d+'"/>'][i%4];
+    var svg='<svg xmlns="http://www.w3.org/2000/svg" width="180" height="50" viewBox="0 0 180 50">'+m+'<text x="48" y="22" font-family="Poppins,Arial,sans-serif" font-size="15" font-weight="700" fill="'+c+'">'+W+'</text><text x="48" y="38" font-family="Poppins,Arial,sans-serif" font-size="10" letter-spacing="2" fill="#667089">ACPRC FORUM</text></svg>';
+    return {org:'',def:1,src:'data:image/svg+xml,'+encodeURIComponent(svg)};
+  }
   function parRender(list){
     var box=$('parBox');box.innerHTML='';box.style.removeProperty('--d');
-    var ph=!list.length;
-    function item(x,clone){var w=mk('div','par-it'+(ph?' vide':''));if(clone)w.setAttribute('aria-hidden','true');
-      if(ph){w.textContent=tr('Logo partenaire');return w}
-      var im=mk('img');im.src=parUrl(x.logo_path);im.alt=clone?'':x.org;im.draggable=false;w.appendChild(im);return w}
-    var base=ph?[0,0,0,0,0,0]:list;
+    var base=list.slice(),n=Math.max(0,PAR_DEF_N-base.length);
+    for(var k=0;k<n;k++)base.push(parDef(k));
+    function item(x,clone){var w=mk('div','par-it');if(clone)w.setAttribute('aria-hidden','true');
+      var im=mk('img');im.src=x.def?x.src:parUrl(x.logo_path);im.alt=(clone||x.def)?'':x.org;im.draggable=false;w.appendChild(im);return w}
     function fill(){
       box.innerHTML='';var view=box.parentNode,vw=view.clientWidth||window.innerWidth,reps=1;
       base.forEach(function(x){box.appendChild(item(x,false))});
@@ -2963,10 +2973,9 @@ body.adm .blobs{display:none}
       for(var r=1;r<reps;r++)base.forEach(function(x){box.appendChild(item(x,true))});
       var half=box.childNodes.length;
       for(var i=0;i<half;i++)box.appendChild(box.childNodes[i].cloneNode(true)).setAttribute('aria-hidden','true');
-      box.style.setProperty('--d',Math.max(20,half*4)+'s');
+      box.style.setProperty('--d',Math.max(24,half*4)+'s');
     }
     fill();
-    if(ph)return;
     var imgs=box.querySelectorAll('img'),left=imgs.length,done=false;
     function again(){if(done)return;done=true;fill()}
     imgs.forEach(function(i){if(i.complete)left--;else{i.addEventListener('load',function(){if(--left<=0)again()});i.addEventListener('error',function(){if(--left<=0)again()})}});
