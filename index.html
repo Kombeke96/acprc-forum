@@ -2946,7 +2946,7 @@ body.adm .blobs{display:none}
   var PAR=[],PAR_T=['Partenaire principal','Partenaire officiel','Soutien institutionnel','Partenaire média'],parBlob=null;
   function parUrl(p){return p?SB_BASE()+'/storage/v1/object/public/partenaires/'+encodeURI(p):null}
   /* logos par défaut (génériques, à la charte ACPRC) : remplacés un à un par les vrais logos ajoutés */
-  var PAR_DEF_N=50;
+  var PAR_DEF_N=2;
   function parDef(i){
     var C=['#132D5E','#AF8B3F','#16356d','#d9a24a'],c=C[(i+(i>>1))%4],d=C[(i+(i>>1)+1+((i>>2)%3))%4],t='LOGO '+(i+1<10?'0':'')+(i+1);
     var M=['<circle cx="22" cy="25" r="14" fill="C"/><circle cx="32" cy="25" r="9" fill="D" opacity=".85"/>',
