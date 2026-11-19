@@ -135,17 +135,16 @@ a{color:inherit}
 @media print{body *{visibility:hidden}#pfOut,#pfOut *{visibility:visible}#pfOut{position:absolute;left:0;top:0;width:100%}#pfOut .noprint{display:none}.invoice{border:0}}
 
 /* Équipe : profils */
-.par-strip{padding:2.2rem 0 2.4rem;margin:1.2rem 0;background:linear-gradient(180deg,#fff6ea,#fffaf4);border-block:1px solid rgba(19,45,94,.08)}
-.par-lab{margin:0 0 1.1rem;text-align:center;font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:var(--navy);font-weight:700}
-.par-lab:after{content:"";display:block;width:42px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--gold-2));margin:.6rem auto 0}
-.par-view{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
-.par-track{display:flex;align-items:center;width:max-content;padding:.6rem 0 1rem;animation:parRun var(--d,30s) linear infinite}
-.par-it{flex:none;box-sizing:border-box;width:200px;height:92px;margin-right:1.1rem;padding:.8rem 1.3rem;display:grid;place-items:center;background:#fff;border:1px solid rgba(19,45,94,.08);border-radius:18px;box-shadow:0 6px 18px rgba(19,45,94,.07);pointer-events:none;user-select:none;-webkit-user-select:none;cursor:default}
-.par-it img{max-height:58px;max-width:100%;width:auto;height:auto;object-fit:contain;-webkit-user-drag:none}
-.par-it.vide{text-align:center;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:rgba(19,45,94,.38)}
+.par-strip{padding-block:1.6rem 1.8rem}
+.par-strip .head{margin-bottom:.9rem}
+.par-view{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}.par-view+.par-view{margin-top:.5rem}
+.par-track{display:flex;align-items:center;width:max-content;animation:parRun var(--d,40s) linear infinite}
+.par-view.rev .par-track{animation-direction:reverse}
+.par-it{flex:none;box-sizing:border-box;width:148px;height:60px;margin-right:.6rem;padding:.4rem .8rem;display:grid;place-items:center;background:#fff;border:1px solid rgba(19,45,94,.08);border-radius:14px;box-shadow:0 3px 10px rgba(19,45,94,.05);pointer-events:none;user-select:none;-webkit-user-select:none;cursor:default}
+.par-it img{max-height:38px;max-width:100%;width:auto;height:auto;object-fit:contain;-webkit-user-drag:none}
 @keyframes parRun{to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){.par-track{animation:none}.par-view{overflow-x:auto;scrollbar-width:none}}
-@media(max-width:560px){.par-it{width:160px;height:80px;margin-right:.8rem}}
+@media(max-width:560px){.par-it{width:124px;height:52px;margin-right:.5rem}.par-it img{max-height:32px}}
 .par-grp{margin:1.4rem 0 0}.par-t{text-align:center;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 .7rem}
 .par-row{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center}
 .par-logo{background:#fff;border:1px solid rgba(19,45,94,.12);border-radius:20px;min-width:150px;height:92px;padding:.9rem 1.3rem;display:grid;place-items:center;box-shadow:0 8px 22px rgba(19,45,94,.06);transition:transform .2s,box-shadow .2s}
@@ -879,9 +878,10 @@ body.adm .blobs{display:none}
 
   <section id="partenaires" class="par-strip" aria-label="Ils nous accompagnent">
     <div class="wrap">
-      <p class="par-lab">Ils nous accompagnent</p>
-      <div class="par-view"><div class="par-track" id="parBox" data-dyn></div></div>
+      <div class="head"><span class="eyebrow"><i></i> Ils nous accompagnent</span></div>
     </div>
+    <div class="par-view"><div class="par-track" id="parBox" data-dyn></div></div>
+    <div class="par-view rev"><div class="par-track" id="parBox2" data-dyn></div></div>
   </section>
 
   <section id="pourquoi">
@@ -2950,34 +2950,41 @@ body.adm .blobs{display:none}
   var PAR=[],PAR_T=['Partenaire principal','Partenaire officiel','Soutien institutionnel','Partenaire média'],parBlob=null;
   function parUrl(p){return p?SB_BASE()+'/storage/v1/object/public/partenaires/'+encodeURI(p):null}
   /* logos par défaut (génériques, à la charte ACPRC) : remplacés un à un par les vrais logos ajoutés */
-  var PAR_DEF_N=8;
+  var PAR_DEF_N=50;
   function parDef(i){
-    var C=['#132D5E','#AF8B3F','#16356d','#d9a24a'],c=C[i%4],d=C[(i+1)%4],W=['VOTRE','LOGO','PARTENAIRE','VOTRE','LOGO','PARTENAIRE','VOTRE','LOGO'][i%8];
-    var m=[ '<circle cx="22" cy="25" r="14" fill="'+c+'"/><circle cx="32" cy="25" r="9" fill="'+d+'" opacity=".85"/>',
-            '<rect x="8" y="11" width="28" height="28" rx="7" fill="'+c+'"/><rect x="20" y="19" width="16" height="16" rx="5" fill="'+d+'" opacity=".9"/>',
-            '<path d="M22 8 38 38H6z" fill="'+c+'"/><path d="M22 20 31 38H13z" fill="'+d+'" opacity=".9"/>',
-            '<path d="M8 25a14 14 0 0 1 28 0z" fill="'+c+'"/><rect x="8" y="29" width="28" height="8" rx="4" fill="'+d+'"/>'][i%4];
-    var svg='<svg xmlns="http://www.w3.org/2000/svg" width="180" height="50" viewBox="0 0 180 50">'+m+'<text x="48" y="22" font-family="Poppins,Arial,sans-serif" font-size="15" font-weight="700" fill="'+c+'">'+W+'</text><text x="48" y="38" font-family="Poppins,Arial,sans-serif" font-size="10" letter-spacing="2" fill="#667089">ACPRC FORUM</text></svg>';
+    var C=['#132D5E','#AF8B3F','#16356d','#d9a24a'],c=C[(i+(i>>1))%4],d=C[(i+(i>>1)+1+((i>>2)%3))%4],t='LOGO '+(i+1<10?'0':'')+(i+1);
+    var M=['<circle cx="22" cy="25" r="14" fill="C"/><circle cx="32" cy="25" r="9" fill="D" opacity=".85"/>',
+      '<rect x="8" y="11" width="28" height="28" rx="7" fill="C"/><rect x="20" y="19" width="16" height="16" rx="5" fill="D" opacity=".9"/>',
+      '<path d="M22 8 38 38H6z" fill="C"/><path d="M22 20 31 38H13z" fill="D" opacity=".9"/>',
+      '<path d="M8 25a14 14 0 0 1 28 0z" fill="C"/><rect x="8" y="29" width="28" height="8" rx="4" fill="D"/>',
+      '<path d="M22 6 38 25 22 44 6 25z" fill="C"/><path d="M22 16 30 25 22 34 14 25z" fill="D" opacity=".9"/>',
+      '<circle cx="22" cy="25" r="15" fill="none" stroke="C" stroke-width="6"/><circle cx="22" cy="25" r="5" fill="D"/>',
+      '<rect x="7" y="10" width="13" height="30" rx="4" fill="C"/><rect x="24" y="18" width="13" height="22" rx="4" fill="D"/>',
+      '<path d="M6 36 16 12l8 16 6-10 8 18z" fill="C"/><circle cx="32" cy="12" r="4" fill="D"/>'];
+    var m=M[i%8].replace(/fill="C"/g,'fill="'+c+'"').replace(/stroke="C"/g,'stroke="'+c+'"').replace(/fill="D"/g,'fill="'+d+'"');
+    var svg='<svg xmlns="http://www.w3.org/2000/svg" width="150" height="50" viewBox="0 0 150 50">'+m+'<text x="48" y="25" font-family="Poppins,Arial,sans-serif" font-size="14" font-weight="700" fill="'+c+'">'+t+'</text><text x="48" y="38" font-family="Poppins,Arial,sans-serif" font-size="8" letter-spacing="1.6" fill="#667089">PARTENAIRE</text></svg>';
     return {org:'',def:1,src:'data:image/svg+xml,'+encodeURIComponent(svg)};
   }
   function parRender(list){
-    var box=$('parBox');box.innerHTML='';box.style.removeProperty('--d');
-    var base=list.slice(),n=Math.max(0,PAR_DEF_N-base.length);
+    var rows=[$('parBox'),$('parBox2')],base=list.slice(),n=Math.max(0,PAR_DEF_N-base.length);
     for(var k=0;k<n;k++)base.push(parDef(k));
+    var sets=[[],[]];base.forEach(function(x,i){sets[i%2].push(x)});
     function item(x,clone){var w=mk('div','par-it');if(clone)w.setAttribute('aria-hidden','true');
       var im=mk('img');im.src=x.def?x.src:parUrl(x.logo_path);im.alt=(clone||x.def)?'':x.org;im.draggable=false;w.appendChild(im);return w}
-    function fill(){
-      box.innerHTML='';var view=box.parentNode,vw=view.clientWidth||window.innerWidth,reps=1;
-      base.forEach(function(x){box.appendChild(item(x,false))});
-      var one=box.scrollWidth||1;reps=Math.max(1,Math.ceil(vw/one));
-      for(var r=1;r<reps;r++)base.forEach(function(x){box.appendChild(item(x,true))});
+    function fill(box,set){
+      box.innerHTML='';box.style.removeProperty('--d');if(!set.length)return;
+      var view=box.parentNode,vw=view.clientWidth||window.innerWidth;
+      set.forEach(function(x){box.appendChild(item(x,false))});
+      var one=box.scrollWidth||1,reps=Math.max(1,Math.ceil(vw/one));
+      for(var r=1;r<reps;r++)set.forEach(function(x){box.appendChild(item(x,true))});
       var half=box.childNodes.length;
       for(var i=0;i<half;i++)box.appendChild(box.childNodes[i].cloneNode(true)).setAttribute('aria-hidden','true');
-      box.style.setProperty('--d',Math.max(24,half*4)+'s');
+      box.style.setProperty('--d',Math.max(30,half*3)+'s');
     }
-    fill();
-    var imgs=box.querySelectorAll('img'),left=imgs.length,done=false;
-    function again(){if(done)return;done=true;fill()}
+    function all(){rows.forEach(function(b,i){fill(b,sets[i])})}
+    all();
+    var imgs=document.querySelectorAll('#partenaires img'),left=imgs.length,done=false;
+    function again(){if(done)return;done=true;all()}
     imgs.forEach(function(i){if(i.complete)left--;else{i.addEventListener('load',function(){if(--left<=0)again()});i.addEventListener('error',function(){if(--left<=0)again()})}});
     if(left<=0)again();setTimeout(again,2500);
   }
