@@ -135,16 +135,18 @@ a{color:inherit}
 @media print{body *{visibility:hidden}#pfOut,#pfOut *{visibility:visible}#pfOut{position:absolute;left:0;top:0;width:100%}#pfOut .noprint{display:none}.invoice{border:0}}
 
 /* Équipe : profils */
-.par-strip{padding-block:1.6rem 1.8rem}
-.par-strip .head{margin-bottom:.9rem}
-.par-view{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}.par-view+.par-view{margin-top:.5rem}
+.par-strip{padding:0;background:var(--navy);border-block:2px solid var(--gold)}
+.par-bar{display:flex;align-items:center;max-width:100%}
+.par-tag{flex:none;display:inline-flex;align-items:center;gap:.5rem;align-self:stretch;padding:0 1.2rem;background:linear-gradient(90deg,var(--gold),var(--gold-2));color:#fff;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;position:relative;z-index:1;box-shadow:6px 0 14px rgba(0,0,0,.25)}
+.par-tag i{width:7px;height:7px;border-radius:50%;background:#fff;animation:parBlink 1.6s ease-in-out infinite}
+@keyframes parBlink{50%{opacity:.35}}
+.par-view{flex:1;min-width:0;overflow:hidden;padding:.55rem 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent)}
 .par-track{display:flex;align-items:center;width:max-content;animation:parRun var(--d,40s) linear infinite}
-.par-view.rev .par-track{animation-direction:reverse}
-.par-it{flex:none;box-sizing:border-box;width:148px;height:60px;margin-right:.6rem;padding:.4rem .8rem;display:grid;place-items:center;background:#fff;border:1px solid rgba(19,45,94,.08);border-radius:14px;box-shadow:0 3px 10px rgba(19,45,94,.05);pointer-events:none;user-select:none;-webkit-user-select:none;cursor:default}
-.par-it img{max-height:38px;max-width:100%;width:auto;height:auto;object-fit:contain;-webkit-user-drag:none}
+.par-it{flex:none;box-sizing:border-box;width:132px;height:46px;margin-right:.5rem;padding:.3rem .7rem;display:grid;place-items:center;background:#fff;border-radius:10px;pointer-events:none;user-select:none;-webkit-user-select:none;cursor:default}
+.par-it img{max-height:30px;max-width:100%;width:auto;height:auto;object-fit:contain;-webkit-user-drag:none}
 @keyframes parRun{to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){.par-track{animation:none}.par-view{overflow-x:auto;scrollbar-width:none}}
-@media(max-width:560px){.par-it{width:124px;height:52px;margin-right:.5rem}.par-it img{max-height:32px}}
+@media(max-width:560px){.par-tag{padding:0 .7rem;font-size:.66rem}.par-tag i{display:none}.par-it{width:108px;height:40px}.par-it img{max-height:26px}}
 .par-grp{margin:1.4rem 0 0}.par-t{text-align:center;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 .7rem}
 .par-row{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center}
 .par-logo{background:#fff;border:1px solid rgba(19,45,94,.12);border-radius:20px;min-width:150px;height:92px;padding:.9rem 1.3rem;display:grid;place-items:center;box-shadow:0 8px 22px rgba(19,45,94,.06);transition:transform .2s,box-shadow .2s}
@@ -877,11 +879,10 @@ body.adm .blobs{display:none}
   </div>
 
   <section id="partenaires" class="par-strip" aria-label="Ils nous accompagnent">
-    <div class="wrap">
-      <div class="head"><span class="eyebrow"><i></i> Ils nous accompagnent</span></div>
+    <div class="par-bar">
+      <span class="par-tag"><i></i> Ils nous accompagnent</span>
+      <div class="par-view"><div class="par-track" id="parBox" data-dyn></div></div>
     </div>
-    <div class="par-view"><div class="par-track" id="parBox" data-dyn></div></div>
-    <div class="par-view rev"><div class="par-track" id="parBox2" data-dyn></div></div>
   </section>
 
   <section id="pourquoi">
@@ -2966,9 +2967,9 @@ body.adm .blobs{display:none}
     return {org:'',def:1,src:'data:image/svg+xml,'+encodeURIComponent(svg)};
   }
   function parRender(list){
-    var rows=[$('parBox'),$('parBox2')],base=list.slice(),n=Math.max(0,PAR_DEF_N-base.length);
+    var rows=[$('parBox')],base=list.slice(),n=Math.max(0,PAR_DEF_N-base.length);
     for(var k=0;k<n;k++)base.push(parDef(k));
-    var sets=[[],[]];base.forEach(function(x,i){sets[i%2].push(x)});
+    var sets=[base];
     function item(x,clone){var w=mk('div','par-it');if(clone)w.setAttribute('aria-hidden','true');
       var im=mk('img');im.src=x.def?x.src:parUrl(x.logo_path);im.alt=(clone||x.def)?'':x.org;im.draggable=false;w.appendChild(im);return w}
     function fill(box,set){
@@ -2979,7 +2980,7 @@ body.adm .blobs{display:none}
       for(var r=1;r<reps;r++)set.forEach(function(x){box.appendChild(item(x,true))});
       var half=box.childNodes.length;
       for(var i=0;i<half;i++)box.appendChild(box.childNodes[i].cloneNode(true)).setAttribute('aria-hidden','true');
-      box.style.setProperty('--d',Math.max(30,half*3)+'s');
+      box.style.setProperty('--d',Math.max(40,half*3)+'s');
     }
     function all(){rows.forEach(function(b,i){fill(b,sets[i])})}
     all();
