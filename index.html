@@ -135,18 +135,14 @@ a{color:inherit}
 @media print{body *{visibility:hidden}#pfOut,#pfOut *{visibility:visible}#pfOut{position:absolute;left:0;top:0;width:100%}#pfOut .noprint{display:none}.invoice{border:0}}
 
 /* Équipe : profils */
-.par-strip{padding:0;background:var(--navy);border-block:2px solid var(--gold)}
-.par-bar{display:flex;align-items:center;max-width:100%}
-.par-tag{flex:none;display:inline-flex;align-items:center;gap:.5rem;align-self:stretch;padding:0 1.2rem;background:linear-gradient(90deg,var(--gold),var(--gold-2));color:#fff;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;position:relative;z-index:1;box-shadow:6px 0 14px rgba(0,0,0,.25)}
-.par-tag i{width:7px;height:7px;border-radius:50%;background:#fff;animation:parBlink 1.6s ease-in-out infinite}
-@keyframes parBlink{50%{opacity:.35}}
-.par-view{flex:1;min-width:0;overflow:hidden;padding:.55rem 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent)}
+.par-panel{background:#fff;border:1px solid var(--line);border-radius:28px;box-shadow:0 10px 30px rgba(19,45,94,.06);padding:1.3rem 0;overflow:hidden}
+.par-view{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
 .par-track{display:flex;align-items:center;width:max-content;animation:parRun var(--d,40s) linear infinite}
-.par-it{flex:none;box-sizing:border-box;width:132px;height:46px;margin-right:.5rem;padding:.3rem .7rem;display:grid;place-items:center;background:#fff;border-radius:10px;pointer-events:none;user-select:none;-webkit-user-select:none;cursor:default}
-.par-it img{max-height:30px;max-width:100%;width:auto;height:auto;object-fit:contain;-webkit-user-drag:none}
+.par-it{flex:none;box-sizing:border-box;width:210px;height:96px;margin-right:1rem;padding:.6rem 1.2rem;display:grid;place-items:center;background:var(--bg);border:1px solid var(--line);border-radius:20px;pointer-events:none;user-select:none;-webkit-user-select:none;cursor:default}
+.par-it img{max-height:58px;max-width:100%;width:auto;height:auto;object-fit:contain;-webkit-user-drag:none}
 @keyframes parRun{to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){.par-track{animation:none}.par-view{overflow-x:auto;scrollbar-width:none}}
-@media(max-width:560px){.par-tag{padding:0 .7rem;font-size:.66rem}.par-tag i{display:none}.par-it{width:108px;height:40px}.par-it img{max-height:26px}}
+@media(max-width:560px){.par-panel{border-radius:22px;padding:.9rem 0}.par-it{width:150px;height:76px;margin-right:.7rem}.par-it img{max-height:44px}}
 .par-grp{margin:1.4rem 0 0}.par-t{text-align:center;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 .7rem}
 .par-row{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center}
 .par-logo{background:#fff;border:1px solid rgba(19,45,94,.12);border-radius:20px;min-width:150px;height:92px;padding:.9rem 1.3rem;display:grid;place-items:center;box-shadow:0 8px 22px rgba(19,45,94,.06);transition:transform .2s,box-shadow .2s}
@@ -878,10 +874,10 @@ body.adm .blobs{display:none}
     </div>
   </div>
 
-  <section id="partenaires" class="par-strip" aria-label="Ils nous accompagnent">
-    <div class="par-bar">
-      <span class="par-tag"><i></i> Ils nous accompagnent</span>
-      <div class="par-view"><div class="par-track" id="parBox" data-dyn></div></div>
+  <section id="partenaires" aria-label="Ils nous accompagnent">
+    <div class="wrap">
+      <div class="head"><span class="eyebrow"><i></i> Ils nous accompagnent</span><h2>Des partenaires engagés pour la conformité</h2></div>
+      <div class="par-panel"><div class="par-view"><div class="par-track" id="parBox" data-dyn></div></div></div>
     </div>
   </section>
 
