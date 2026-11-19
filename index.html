@@ -135,14 +135,15 @@ a{color:inherit}
 @media print{body *{visibility:hidden}#pfOut,#pfOut *{visibility:visible}#pfOut{position:absolute;left:0;top:0;width:100%}#pfOut .noprint{display:none}.invoice{border:0}}
 
 /* Équipe : profils */
-.par-strip{padding:1.6rem 0;margin:0;background:#fff;border-block:1px solid var(--line);box-shadow:0 10px 30px rgba(19,45,94,.05)}
-.par-view{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+.par-strip{padding-block:1.6rem 1rem}
+.par-panel{background:#fff;border:1px solid var(--line);border-radius:28px;box-shadow:0 10px 30px rgba(19,45,94,.06);padding:1.5rem 0;overflow:hidden}
+.par-view{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
 .par-track{display:flex;align-items:center;width:max-content;animation:parRun var(--d,40s) linear infinite}
-.par-it{flex:none;display:flex;align-items:center;justify-content:center;margin-right:3.2rem;pointer-events:none;user-select:none;-webkit-user-select:none;cursor:default}
-.par-it img{display:block;height:auto;width:auto;max-height:110px;max-width:none;-webkit-user-drag:none}
+.par-it{flex:none;box-sizing:border-box;width:170px;height:68px;margin-right:2.2rem;display:flex;align-items:center;justify-content:center;pointer-events:none;user-select:none;-webkit-user-select:none;cursor:default}
+.par-it img{display:block;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;-webkit-user-drag:none}
 @keyframes parRun{to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){.par-track{animation:none}.par-view{overflow-x:auto;scrollbar-width:none}}
-@media(max-width:560px){.par-strip{padding:1rem 0}.par-it{margin-right:2rem}.par-it img{max-height:70px}}
+@media(max-width:560px){.par-strip{padding-block:1.2rem .6rem}.par-panel{border-radius:22px;padding:1rem 0}.par-it{width:130px;height:54px;margin-right:1.5rem}}
 .par-grp{margin:1.4rem 0 0}.par-t{text-align:center;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 .7rem}
 .par-row{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center}
 .par-logo{background:#fff;border:1px solid rgba(19,45,94,.12);border-radius:20px;min-width:150px;height:92px;padding:.9rem 1.3rem;display:grid;place-items:center;box-shadow:0 8px 22px rgba(19,45,94,.06);transition:transform .2s,box-shadow .2s}
@@ -875,7 +876,7 @@ body.adm .blobs{display:none}
   </div>
 
   <section id="partenaires" class="par-strip">
-    <div class="par-view"><div class="par-track" id="parBox" data-dyn></div></div>
+    <div class="wrap"><div class="par-panel"><div class="par-view"><div class="par-track" id="parBox" data-dyn></div></div></div></div>
   </section>
 
   <section id="pourquoi">
