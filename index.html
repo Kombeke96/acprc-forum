@@ -2185,9 +2185,7 @@ body.adm .blobs{display:none}
     });
     Object.keys(PLACE).forEach(function(cat){
       if(pub.some(function(x){return x.cat===cat}))return;
-      var d=PLACE[cat],c=el('div','person');c.appendChild(avatarNode(null));
-      c.appendChild(el('span','tag',tr(cat)));c.appendChild(el('h3',null,tr(d.h)));
-      if(d.p)c.appendChild(el('p',null,tr(d.p)));if(d.s)c.appendChild(el('span','soon',tr(d.s)));
+      var c=el('div','person');c.appendChild(avatarNode(null));
       box.appendChild(c);
     });
   }
