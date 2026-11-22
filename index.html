@@ -261,8 +261,10 @@ section{padding-block:2.5rem;position:relative}
 @media(max-width:520px){.prog li{grid-template-columns:1fr;gap:.1rem}}
 
 /* Intervenants */
-.people{display:grid;gap:1.1rem;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
-.person{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.6rem 1.2rem;text-align:center;display:grid;gap:.5rem;justify-items:center;box-shadow:var(--shadow)}
+.people{display:grid;gap:1.1rem;grid-template-columns:repeat(3,1fr)}
+@media(max-width:860px){.people{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:440px){.people{grid-template-columns:1fr}}
+.person{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.6rem 1.2rem;text-align:center;display:grid;align-content:start;gap:.5rem;justify-items:center;box-shadow:var(--shadow)}
 .avatar{width:96px;height:96px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(140deg,var(--peach),var(--sky));border:4px solid #fff;box-shadow:0 8px 22px rgba(19,45,94,.14)}
 .avatar svg{width:44px;height:44px;stroke:var(--navy);fill:none;stroke-width:1.6;opacity:.6}
 .tag{font-size:.74rem;font-weight:600;color:var(--gold);letter-spacing:.06em;text-transform:uppercase}
@@ -2173,6 +2175,7 @@ body.adm .blobs{display:none}
   var PLACE={"Invité d'honneur":{h:'À confirmer',s:'Bientôt annoncé'},'Keynote':{h:'À confirmer',p:'« La conformité, coût réglementaire ou avantage concurrentiel ? »'},'Table ronde':{h:'Panélistes',s:'Bientôt annoncés'},'Bureau Exécutif':{h:"Bureau de l'ACPRC",s:'Bientôt annoncé'}};
   var AVSVG='<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>';
   function avatarNode(photo){var a=el('div','avatar');if(photo){var i=document.createElement('img');i.src=photo;i.alt='';a.appendChild(i)}else a.innerHTML=AVSVG;return a}
+  var SPK_SLOTS=6;
   function renderSpeakers(){
     var box=$('peopleBox');box.innerHTML='';
     var pub=speakers.filter(function(x){return x.statut==='ok'&&x.pub});
@@ -2183,11 +2186,11 @@ body.adm .blobs{display:none}
       if(x.bio)c.appendChild(el('p',null,x.bio));
       box.appendChild(c);
     });
-    Object.keys(PLACE).forEach(function(cat){
-      if(pub.some(function(x){return x.cat===cat}))return;
+    for(var k=pub.length;k<SPK_SLOTS;k++){
       var c=el('div','person');c.appendChild(avatarNode(null));
+      c.appendChild(el('span','soon',tr('Bientôt annoncé')));
       box.appendChild(c);
-    });
+    }
   }
   function renderSpeakersAdmin(){
     var ok=speakers.filter(function(x){return x.statut==='ok'}).length,pub=speakers.filter(function(x){return x.statut==='ok'&&x.pub}).length;
